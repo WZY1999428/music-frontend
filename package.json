@@ -1,0 +1,30 @@
+{
+  "name": "music",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "rsbuild --env-dir config build",
+    "dev": "rsbuild --env-dir config",
+    "preview": "rsbuild --env-dir config preview"
+  },
+  "dependencies": {
+    "@wangeditor/editor": "^5.1.23",
+    "@wangeditor/editor-for-vue": "^5.1.12",
+    "ant-design-vue": "^4.2.6",
+    "axios": "^1.20.0",
+    "echarts": "^6.1.0",
+    "koa-range": "^0.3.0",
+    "pinia": "^4.0.3",
+    "vue": "^3.5.42",
+    "vue-router": "^5.3.1"
+  },
+  "devDependencies": {
+    "@rsbuild/core": "^2.2.5",
+    "@rsbuild/plugin-sass": "^2.0.1",
+    "@rsbuild/plugin-tailwindcss": "^2.0.3",
+    "@rsbuild/plugin-vue": "^2.0.1",
+    "tailwindcss": "^4.3.3",
+    "unplugin-auto-import": "^21.1.0"
+  }
+}
