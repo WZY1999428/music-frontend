@@ -12,10 +12,10 @@ export function getUploadFiles(params) {
 
 
 
-export function delUploadFiles(fileId) {
+export function delUploadFiles(fileIds) {
     return request({
         url: '/upload/files',
         method: 'delete',
-        params: { fileId }
+        params: { fileIds }
     })
 }

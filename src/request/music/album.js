@@ -17,9 +17,6 @@ export function getAlbumInfo(id) {
 }
 
 
-
-
-
 export function saveAlbum(data) {
     return request({
         url: '/music/album/save',
@@ -27,7 +24,6 @@ export function saveAlbum(data) {
         data
     })
 }
-
 
 
 export function delAlbum(id) {
@@ -49,5 +45,27 @@ export function searchAlbum(keyword) {
     })
 }
 
+export function getAlbumSongList(albumId) {
+    return request({
+        url: '/music/album/albumSong',
+        method: 'get',
+        params: { albumId }
+    })
+}
 
 
+export function saveAlbumSong(data) {
+    return request({
+        url: '/music/album/saveAlbumSong',
+        method: 'post',
+        data
+    })
+}
+
+export function removeAlbumSong(params) {
+    return request({
+        url: '/music/album/albumSong',
+        method: 'delete',
+        params
+    })
+}

@@ -58,7 +58,7 @@
                     <a-switch v-model:checked="formData.enabled" :checkedValue="1" :unCheckedValue="0" />
                 </a-form-item>
                 <a-form-item name="description" label="详情描述">
-                    <a-textarea v-model:value="formData.description" :max-length="500" show-count placeholder="请输入"
+                    <a-textarea v-model:value="formData.description" :maxlength="500" show-count placeholder="请输入"
                         :rows="5" />
                 </a-form-item>
             </a-form>

@@ -44,6 +44,7 @@ export default () => {
         '/avatar': backendProxy,
         '/uploads': backendProxy,
         '/cover': backendProxy,
+        '/video': backendProxy,
       },
     },
   }

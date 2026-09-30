@@ -23,6 +23,11 @@
                         </a-form-item>
                     </a-col>
                     <a-col :span="12">
+                        <a-form-item name="mvUrl" label="歌曲mv">
+                            <uploadFile v-model="formData.mvUrl" mode="single" savePath="video" accept="video/mp4,video/ogg,video/webm" :size="150"></uploadFile>
+                        </a-form-item>
+                    </a-col>
+                    <a-col :span="12">
                         <a-form-item name="publishDate" label="发布时间">
                             <a-date-picker v-model:value="formData.publishDate" style="width:100%"
                                 value-format="YYYY-MM-DD" />
@@ -106,6 +111,7 @@
 
 <script setup>
 import uploadImage from "@/components/uploadImage/index.vue"
+import uploadFile from "@/components/uploadFile/index.vue"
 import DictSelect from "@/components/dictSelect/index.vue"
 import { PlusOutlined, DeleteOutlined, SoundOutlined, UploadOutlined } from '@ant-design/icons-vue'
 import { getSongInfo, saveSong, uploadAudio } from "@/request/music/song.js"
@@ -242,6 +248,7 @@ function initForm(data = {}) {
     formData.value = {
         title: data.title,
         cover: data.cover,
+        mvUrl: data.mvUrl,
         publishDate: data.publishDate,
         singerList: data.singerList ?? []
     }

@@ -24,7 +24,7 @@
     <div class="mt-2 p-2  bg-white rounded">
         <div class="p-2 bg-white rounded flex-1 min-w-[800px]">
             <div class="w-full pb-2 flex justify-end">
-                <a-button type="primary" @click="openEidt(null, false)">
+                <a-button type="primary" @click="openEdit(null, false)">
                     <template #icon>
                         <PlusOutlined />
                     </template>新增专辑</a-button>
@@ -34,7 +34,7 @@
                     row-key="id">
                     <template #bodyCell="{ column, record }">
                         <template v-if="column.key === 'cover'">
-                            <a-image :width="36" :height="36" :src=" record[column.key]"
+                            <a-image :width="36" :height="36" :src="record[column.key]"
                                 class="rounded object-cover border flex-shrink-0" />
                         </template>
                         <template v-else-if="column.key === 'enabled'">
@@ -59,8 +59,8 @@
                             {{ formatDateTime(record[column.key]) }}
                         </template>
                         <template v-else-if="column.key === 'operation'">
-                            <a-button type="link" @click="openEidt(record.id, true)" primary>详情</a-button>
-                            <a-button type="link" @click="openEidt(record.id, false)" primary>编辑</a-button>
+                            <a-button type="link" @click="openEdit(record.id, true)" primary>详情</a-button>
+                            <a-button type="link" @click="openEdit(record.id, false)" primary>编辑</a-button>
                             <a-button type="link" @click="openAlbumSongs(record.id)" primary>专辑音乐</a-button>
                             <a-button type="link" @click="handleDelete(record.id)" danger>删除</a-button>
                         </template>
@@ -69,7 +69,9 @@
             </a-spin>
         </div>
     </div>
-    <editDialog v-model="show" :id="agreementsId" :readonly="readonly" @saveSuccess="fetchTableData()"></editDialog>
+    <editDialog v-model="show" :id="albumId" :readonly="readonly" @saveSuccess="fetchTableData()"></editDialog>
+    <songManagementDialog v-model="showSongManagement" :id="albumId" @saveSuccess="fetchTableData()">
+    </songManagementDialog>
 </template>
 
 <script setup>
@@ -79,18 +81,21 @@ import { PlusOutlined, ExclamationCircleOutlined } from "@ant-design/icons-vue"
 import { Modal, message } from 'ant-design-vue';
 import { getAlbumList, delAlbum } from "@/request/music/album.js"
 import editDialog from "./editDialog.vue"
+import songManagementDialog from "./songManagement.vue"
+
 const total = ref(0)
 const show = ref(false);
+const showSongManagement = ref(false);
+const albumId = ref(null);
 const readonly = ref(false);
 const loading = ref(false)
 const formRef = ref(null)
 const queryForm = reactive({
-    agreementsId: null,
+    albumId: null,
     pageIndex: 1,
     pageSize: 10
 });
 
-const agreementsId = ref(null)
 const dataSource = reactive([]);
 const columns = reactive([
     {
@@ -168,13 +173,14 @@ function fetchTableData({ current = 1, pageSize = 10 } = {}) {
 }
 
 
-function openAlbumSongs(){
-
+function openAlbumSongs(id) {
+    albumId.value = id;
+    showSongManagement.value = true;
 }
 
 
-function openEidt(id, read) {
-    agreementsId.value = id;
+function openEdit(id, read = false) {
+    albumId.value = id;
     readonly.value = read;
     show.value = true;
 }
@@ -183,7 +189,7 @@ function handleDelete(id) {
     Modal.confirm({
         title: '提示?',
         icon: h(ExclamationCircleOutlined),
-        content: '确定要删除当前协议吗',
+        content: '确定要删除当前专辑吗',
         okText: '确定',
         okType: 'danger',
         cancelText: '取消',

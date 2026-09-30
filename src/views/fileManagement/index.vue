@@ -29,8 +29,11 @@
 
     <div class="mt-4 p-4 bg-white rounded-lg shadow-sm">
         <a-spin tip="加载中..." :spinning="loading">
-            <a-table :dataSource="dataSource" :columns="columns" :pagination="pagination" @change="fetchTableData"
-                size="middle">
+            <div class="mb-2">
+                <a-button type="primary" danger :disabled="!hasSelected" @click="handleDelete()">批量删除</a-button>
+            </div>
+            <a-table :dataSource="dataSource" :columns="columns" row-key="id" :pagination="pagination"
+                @change="fetchTableData" :row-selection="rowselection" size="middle">
                 <template #bodyCell="{ column, record }">
                     <!-- 1. 预览/文件名：带缩略图或类型图标 -->
                     <template v-if="column.key === 'filename'">
@@ -74,14 +77,12 @@
                                 </template>
                                 下载
                             </a-button>
-                            <a-popconfirm title="确定要删除该文件吗？" @confirm="handleDelete(record)">
-                                <a-button type="link" danger size="small">
-                                    <template #icon>
-                                        <DeleteOutlined />
-                                    </template>
-                                    删除
-                                </a-button>
-                            </a-popconfirm>
+                            <a-button type="link" danger size="small" @click="handleDelete(record)">
+                                <template #icon>
+                                    <DeleteOutlined />
+                                </template>
+                                删除
+                            </a-button>
                         </div>
                     </template>
                 </template>
@@ -103,8 +104,6 @@ import {
 } from '@ant-design/icons-vue';
 import { getUploadFiles, delUploadFiles } from "@/request/upload"
 import { Modal, message } from 'ant-design-vue';
-const show = ref(false);
-const readonly = ref(false);
 const loading = ref(false);
 const total = ref(0)
 
@@ -114,7 +113,6 @@ const queryForm = reactive({
     pageIndex: 1,
     pageSize: 10
 });
-
 
 const formRef = ref(null)
 const dataSource = reactive([]);
@@ -166,6 +164,14 @@ const columns = reactive([
     },
 ])
 
+const hasSelected = computed(() => rowselection.selectedRowKeys.value.length > 0);
+const rowselection = {
+    onChange: (keys) => {
+        rowselection.selectedRowKeys.value = keys;
+    },
+    selectedRowKeys: ref([])
+}
+
 
 const pagination = computed(() => ({
     total: total.value,
@@ -173,16 +179,14 @@ const pagination = computed(() => ({
     pageSize: queryForm.pageSize,
 }));
 
-function openDialog(id, read) {
-    roleId.value = id;
-    readonly.value = read;
-    show.value = true;
-}
+
+
 
 fetchTableData()
 function fetchTableData({ current = 1, pageSize = 10 } = {}) {
     queryForm.pageIndex = current;
     queryForm.pageSize = pageSize;
+    rowselection.selectedRowKeys.value = []
     loading.value = true;
     getUploadFiles(queryForm).then(res => {
         dataSource.splice(0, dataSource.length, ...res.list)
@@ -200,14 +204,15 @@ const getTagColor = (mimeType = '') => {
     return 'default';
 };
 
+
 function handleDelete(row) {
     Modal.confirm({
         title: '提示?',
         icon: h(ExclamationCircleOutlined),
-        content: '确定要删除这个文件吗？',
+        content: '确定要删除选择的文件吗？',
         onOk: async () => {
             try {
-                await delUploadFiles(row.id);
+                await delUploadFiles(row ? [row.id] : rowselection.selectedRowKeys.value);
                 message.success('删除成功');
                 fetchTableData();
             } catch (error) {

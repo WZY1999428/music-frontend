@@ -1,14 +1,11 @@
 <template>
     <div class="p-4 bg-white rounded">
         <a-form ref="formRef" :model="queryForm" layout="inline" @finish="fetchTableData()">
-            <a-form-item label="歌手名称" name="title">
-                <a-input v-model:value="queryForm.title" placeholder="请输入菜单名称 " style="width: 280px;" />
+            <a-form-item label="专辑名称" name="title">
+                <a-input v-model:value="queryForm.title" placeholder="请输入专辑名称 " style="width: 280px;" />
             </a-form-item>
-            <a-form-item label="歌曲名称" name="name">
-                <a-input v-model:value="queryForm.name" placeholder="请输入菜单地址 " style="width: 280px;" />
-            </a-form-item>
-            <a-form-item label="日期范围" name="path">
-                <a-input v-model:value="queryForm.path" placeholder="请输入菜单地址 " style="width: 280px;" />
+            <a-form-item label="日期范围" name="dateRange">
+                <a-range-picker v-model:value="queryForm.dateRange" style="width: 280px;" />
             </a-form-item>
             <a-form-item label="状态" name="enabled">
                 <a-select v-model:value="queryForm.enabled" placeholder="请选择菜单状态" style="width: 280px;">
@@ -24,7 +21,7 @@
             </a-form-item>
         </a-form>
     </div>
-    <div class="mt-2 p-2  bg-white rounded">
+    <div class="p-4 mt-2 bg-white rounded">
         <div class="p-2 bg-white rounded flex-1 min-w-[800px]">
             <div class="w-full pb-2 flex justify-end">
                 <a-button type="primary" @click="openEidt(null, false)">
@@ -40,6 +37,13 @@
                             <a-image :width="36" :height="36" :src="record[column.key]"
                                 class="rounded object-cover border flex-shrink-0" />
                         </template>
+                        <template v-else-if="column.key === 'artistList'">
+                            <div class="flex flex-wrap gap-2">
+                                <a-tag v-for="artist in record[column.key]" :key="artist.id" color="blue">
+                                    {{ artist.name }}
+                                </a-tag>
+                            </div>
+                        </template>
                         <template v-else-if="column.key === 'enabled'">
                             {{ record[column.key] == 1 ? "已启用" : "已禁用" }}
                         </template>
@@ -52,6 +56,7 @@
                         <template v-else-if="column.key === 'operation'">
                             <a-button type="link" @click="openEidt(record.id, true)" primary>详情</a-button>
                             <a-button type="link" @click="openEidt(record.id, false)" primary>编辑</a-button>
+                            <a-button type="link" @click="openLyricsManagement(record.id)" primary>歌词管理</a-button>
                             <a-button type="link" @click="handleDelete(record.id)" danger>删除</a-button>
                         </template>
                     </template>
@@ -59,7 +64,8 @@
             </a-spin>
         </div>
     </div>
-    <editDialog v-model="show" :id="agreementsId" :readonly="readonly" @saveSuccess="fetchTableData()"></editDialog>
+    <editDialog v-model="show" :id="songId" :readonly="readonly" @saveSuccess="fetchTableData()"></editDialog>
+    <LyricsManagement v-model="lyricsManagementShow" :id="songId"></LyricsManagement>
 </template>
 
 <script setup>
@@ -69,18 +75,23 @@ import { PlusOutlined, ExclamationCircleOutlined } from "@ant-design/icons-vue"
 import { Modal, message } from 'ant-design-vue';
 import { getSongList, delSong, } from "@/request/music/song.js"
 import editDialog from "./editDialog.vue"
+import LyricsManagement from "./LyricsManagement.vue"
+
 const total = ref(0)
 const show = ref(false);
 const readonly = ref(false);
 const loading = ref(false)
+const lyricsManagementShow = ref(false)
 const formRef = ref(null)
 const queryForm = reactive({
-    agreementsId: null,
+    artist: null,
+    title: null,
+    songId: null,
     pageIndex: 1,
     pageSize: 10
 });
 
-const agreementsId = ref(null)
+const songId = ref(null)
 const dataSource = reactive([]);
 const columns = reactive([
     {
@@ -93,6 +104,11 @@ const columns = reactive([
         title: '歌曲名称',
         dataIndex: 'title',
         key: 'title',
+    },
+    {
+        title: '歌手',
+        dataIndex: 'artistList',
+        key: 'artistList',
     },
     {
         title: '歌曲发布日期',
@@ -118,7 +134,7 @@ const columns = reactive([
         title: '操作',
         key: 'operation',
         fixed: 'right',
-        width: 220,
+        width: 280,
     }
 ]);
 
@@ -144,9 +160,16 @@ function fetchTableData({ current = 1, pageSize = 10 } = {}) {
 
 
 function openEidt(id, read) {
-    agreementsId.value = id;
+    songId.value = id;
     readonly.value = read;
     show.value = true;
+}
+
+function openLyricsManagement(id) {
+    // TODO: 跳转到歌词管理页面
+    songId.value = id;
+    lyricsManagementShow.value = true;
+    console.log('打开歌词管理', id);
 }
 
 function handleDelete(id) {
@@ -158,9 +181,10 @@ function handleDelete(id) {
         okType: 'danger',
         cancelText: '取消',
         async onOk() {
-            await delSong(id).catch(() => { })
-            message.success("删除成功")
-            fetchTableData()
+            await delSong(id).then(_ => {
+                message.success("删除成功")
+                fetchTableData()
+            }).catch(() => { })
         },
         onCancel() {
             console.log('Cancel');
