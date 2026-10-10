@@ -232,7 +232,7 @@ watch(() => show.value, (newVal) => {
         initFormData()
         if (props.id) {
             fetchMenuInfo()
-            fetchPermissionData()
+            if (!props.isCopy) fetchPermissionData()
         }
     }
 });

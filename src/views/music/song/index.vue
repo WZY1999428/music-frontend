@@ -1,8 +1,11 @@
 <template>
     <div class="p-4 bg-white rounded">
         <a-form ref="formRef" :model="queryForm" layout="inline" @finish="fetchTableData()">
-            <a-form-item label="专辑名称" name="title">
+            <a-form-item label="歌曲名称" name="title">
                 <a-input v-model:value="queryForm.title" placeholder="请输入专辑名称 " style="width: 280px;" />
+            </a-form-item>
+            <a-form-item label="歌手名称" name="artist">
+                <a-input v-model:value="queryForm.artist" placeholder="请输入专辑名称 " style="width: 280px;" />
             </a-form-item>
             <a-form-item label="日期范围" name="dateRange">
                 <a-range-picker v-model:value="queryForm.dateRange" style="width: 280px;" />
