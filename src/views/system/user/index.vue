@@ -39,8 +39,8 @@
                             <a-button v-permission="'view:user:detail'" type="link" @click="openDialog(record.id, true)" primary>详情</a-button>
                             <a-button v-permission="'edit:user:detail'" type="link" @click="openDialog(record.id, false)" primary>编辑</a-button>
                             <a-popconfirm title="是否删除当前角色?" ok-text="确定" cancel-text="取消"
-                                @confirm="handleDelete(record)" v-permission="'delete:user'">
-                                <a-button type="link" danger>删除</a-button>
+                                @confirm="handleDelete(record)">
+                                <a-button type="link" v-permission="'delete:user'" danger>删除</a-button>
                             </a-popconfirm>
                         </template>
                     </template>
