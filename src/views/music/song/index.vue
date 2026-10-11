@@ -26,7 +26,7 @@
     </div>
     <div class="p-4 mt-2 bg-white rounded">
         <div class="p-2 bg-white rounded flex-1 min-w-[800px]">
-            <div class="w-full pb-2 flex justify-end">
+            <div class="w-full pb-2 flex justify-end" v-permission="'edit:song:detail'">
                 <a-button type="primary" @click="openEidt(null, false)">
                     <template #icon>
                         <PlusOutlined />
@@ -57,10 +57,14 @@
                             {{ formatDate(record[column.key]) }}
                         </template>
                         <template v-else-if="column.key === 'operation'">
-                            <a-button type="link" @click="openEidt(record.id, true)" primary>详情</a-button>
-                            <a-button type="link" @click="openEidt(record.id, false)" primary>编辑</a-button>
-                            <a-button type="link" @click="openLyricsManagement(record.id)" primary>歌词管理</a-button>
-                            <a-button type="link" @click="handleDelete(record.id)" danger>删除</a-button>
+                            <a-button v-permission="'view:song:detail'" type="link" @click="openEidt(record.id, true)"
+                                primary>详情</a-button>
+                            <a-button v-permission="'edit:song:detail'" type="link" @click="openEidt(record.id, false)"
+                                primary>编辑</a-button>
+                            <a-button v-permission="'edit:song:lyrics'" type="link"
+                                @click="openLyricsManagement(record.id)" primary>歌词管理</a-button>
+                            <a-button v-permission="'delete:song'" type="link" @click="handleDelete(record.id)"
+                                danger>删除</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -179,7 +183,7 @@ function handleDelete(id) {
     Modal.confirm({
         title: '提示?',
         icon: h(ExclamationCircleOutlined),
-        content: '确定要删除当前协议吗',
+        content: '确定要删除当前歌曲吗',
         okText: '确定',
         okType: 'danger',
         cancelText: '取消',

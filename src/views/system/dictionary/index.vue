@@ -18,7 +18,7 @@
 
     <div class="mt-2 p-2  bg-white rounded">
         <div class="w-full pb-2 flex justify-end">
-            <a-button type="primary" @click="openDialog(null, false)">
+            <a-button type="primary" @click="openDialog(null, false)" v-permission="'edit:dictionary:detail'">
                 <template #icon>
                     <PlusOutlined />
                 </template>新增</a-button>
@@ -36,11 +36,11 @@
                         {{ formatDateTime(record[column.key]) }}
                     </template>
                     <template v-else-if="column.key === 'operation'">
-                        <a-button type="link" @click="openDialog(record.id, true)" primary>详情</a-button>
-                        <a-button type="link" @click="openDialog(record.id, false)" primary>编辑</a-button>
-                        <a-button type="link" @click="toDictData(record.id)" primary>字典数据</a-button>
+                        <a-button v-permission="'view:dictionary:detail'" type="link" @click="openDialog(record.id, true)" primary>详情</a-button>
+                        <a-button v-permission="'edit:dictionary:detail'" type="link" @click="openDialog(record.id, false)" primary>编辑</a-button>
+                        <a-button v-permission="'view:dictionary:dictItems'" type="link" @click="toDictData(record.id)" primary>字典数据</a-button>
                         <a-popconfirm title="是否删除当前字典?" ok-text="确定" cancel-text="取消" @confirm="handleDelete(record)">
-                            <a-button type="link" danger>删除</a-button>
+                            <a-button v-permission="'delete:dictionary'" type="link" danger>删除</a-button>
                         </a-popconfirm>
                     </template>
                 </template>

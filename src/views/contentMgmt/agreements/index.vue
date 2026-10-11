@@ -40,9 +40,9 @@
                             {{ formatDateTime(record[column.key]) }}
                         </template>
                         <template v-else-if="column.key === 'operation'">
-                            <a-button type="link" @click="openEidt(record.id, true)" primary>详情</a-button>
-                            <a-button type="link" @click="openEidt(record.id, false)" primary>编辑</a-button>
-                            <a-button type="link" @click="handleDelete(record.id)" danger>删除</a-button>
+                            <a-button v-permission="'view:agreements:detail'" type="link" @click="openEidt(record.id, true)" primary>详情</a-button>
+                            <a-button v-permission="'edit:agreements:detail'" type="link" @click="openEidt(record.id, false)" primary>编辑</a-button>
+                            <a-button v-permission="'delete:agreements'" type="link" @click="handleDelete(record.id)" danger>删除</a-button>
                         </template>
                     </template>
                 </a-table>

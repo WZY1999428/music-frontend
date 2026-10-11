@@ -24,7 +24,7 @@
 
     <div class="mt-2 p-2  bg-white rounded">
         <div class="w-full pb-2 flex justify-end">
-            <a-button type="primary" @click="openDialog(null, false, false)">
+            <a-button type="primary" @click="openDialog(null, false, false)" v-permission="'edit:menu:detail'">
                 <template #icon>
                     <PlusOutlined />
                 </template>新增</a-button>
@@ -43,12 +43,12 @@
                         {{ formatDateTime(record[column.key]) }}
                     </template>
                     <template v-else-if="column.key === 'operation'">
-                        <a-button type="link" @click="openDialog(record, true, false)" primary>详情</a-button>
-                        <a-button type="link" @click="openDialog(record, false, false)" primary>编辑</a-button>
-                        <a-button type="link" @click="openDialog(record, false, true)" primary>复制</a-button>
-                        <a-button type="link" v-if="record.type == 0" @click="addChild(record)" primary>新增子菜单</a-button>
+                        <a-button v-permission="'view:menu:detail'" type="link" @click="openDialog(record, true, false)" primary>详情</a-button>
+                        <a-button v-permission="'edit:menu:detail'" type="link" @click="openDialog(record, false, false)" primary>编辑</a-button>
+                        <a-button v-permission="'copy:menu:detail'" type="link" @click="openDialog(record, false, true)" primary>复制</a-button>
+                        <a-button v-permission="'add:children:menu'" type="link" v-if="record.type == 0" @click="addChild(record)" primary>新增子菜单</a-button>
                         <a-popconfirm title="是否删除当前菜单吗?" ok-text="确定" cancel-text="取消" @confirm="handleDelete(record)">
-                            <a-button type="link" danger>删除</a-button>
+                            <a-button type="link" v-permission="'delete:menu'" danger>删除</a-button>
                         </a-popconfirm>
                     </template>
                 </template>

@@ -30,7 +30,7 @@
 
         <div class="p-2 bg-white rounded flex-1 min-w-[800px]" v-if="queryForm.deptId">
             <div class="w-full pb-2 flex justify-end">
-                <a-button type="primary" @click="showAddUsers = true">
+                <a-button v-permission="'add:dept:user'" type="primary" @click="showAddUsers = true">
                     <template #icon>
                         <PlusOutlined />
                     </template>新增成员</a-button>
@@ -49,13 +49,13 @@
                             {{ formatDateTime(record[column.key]) }}
                         </template>
                         <template v-else-if="column.key === 'operation'">
-                            <a-button type="link" @click="() => {
+                            <a-button v-permission="'view:dept:user'" type="link" @click="() => {
                                 userId = record.id;
                                 showUserEdit = true;
                             }" primary>详情</a-button>
                             <a-popconfirm title="是否删除当前部门用户?" ok-text="确定" cancel-text="取消"
                                 @confirm="handleDeleteUser(record)">
-                                <a-button type="link" danger>删除</a-button>
+                                <a-button type="link" v-permission="'delete:dept:user'" danger>删除</a-button>
                             </a-popconfirm>
                         </template>
                     </template>

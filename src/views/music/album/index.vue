@@ -24,7 +24,7 @@
     <div class="mt-2 p-2  bg-white rounded">
         <div class="p-2 bg-white rounded flex-1 min-w-[800px]">
             <div class="w-full pb-2 flex justify-end">
-                <a-button type="primary" @click="openEdit(null, false)">
+                <a-button type="primary" @click="openEdit(null, false)" v-permission="'edit:album:detail'">
                     <template #icon>
                         <PlusOutlined />
                     </template>新增专辑</a-button>
@@ -59,10 +59,15 @@
                             {{ formatDateTime(record[column.key]) }}
                         </template>
                         <template v-else-if="column.key === 'operation'">
-                            <a-button type="link" @click="openEdit(record.id, true)" primary>详情</a-button>
-                            <a-button type="link" @click="openEdit(record.id, false)" primary>编辑</a-button>
-                            <a-button type="link" @click="openAlbumSongs(record.id)" primary>专辑音乐</a-button>
-                            <a-button type="link" @click="handleDelete(record.id)" danger>删除</a-button>
+                            <!-- view:album:detail -->
+                            <a-button v-permission="'view:album:detail'" type="link" @click="openEdit(record.id, true)"
+                                primary>详情</a-button>
+                            <a-button v-permission="'edit:album:detail'" type="link" @click="openEdit(record.id, false)"
+                                primary>编辑</a-button>
+                            <a-button v-permission="'album:song:manage'" type="link" @click="openAlbumSongs(record.id)"
+                                primary>专辑音乐</a-button>
+                            <a-button v-permission="'delete:album'" type="link" @click="handleDelete(record.id)"
+                                danger>删除</a-button>
                         </template>
                     </template>
                 </a-table>

@@ -14,8 +14,8 @@
     </div>
 
     <div class="mt-2 p-2  bg-white rounded">
-        <div class="w-full pb-2 flex justify-end">
-            <a-button type="primary" @click="openDialog(null, false)">
+        <div class="w-full pb-2 flex justify-end" >
+            <a-button type="primary" v-permission="'edit:role:detail'"  @click="openDialog(null, false)">
                 <template #icon>
                     <PlusOutlined />
                 </template>新增</a-button>
@@ -30,20 +30,20 @@
                         {{ formatDateTime(record[column.key]) }}
                     </template>
                     <template v-else-if="column.key === 'operation'">
-                        <a-button type="link" @click="openDialog(record.id, true)" primary>详情</a-button>
-                        <a-button type="link" @click="openDialog(record.id, false)" primary>编辑</a-button>
-                        <a-button type="link" @click="() => {
+                        <a-button v-permission="'view:role:detail'" type="link" @click="openDialog(record.id, true)" primary>详情</a-button>
+                        <a-button v-permission="'edit:role:detail'" type="link" @click="openDialog(record.id, false)" primary>编辑</a-button>
+                        <a-button v-permission="'role:member:management'" type="link" @click="() => {
                             roleId = record.id;
                             showMemberMgr = true;
                         }" primary>成员管理</a-button>
 
-                        <a-button type="link" @click="() => {
+                        <a-button v-permission="'role:assign:permissions'" type="link" @click="() => {
                             roleId = record.id;
                             showPermissions = true;
                         }" primary>分配权限</a-button>
 
-                        <a-popconfirm title="是否删除当前角色?" ok-text="确定" cancel-text="取消" @confirm="handleDelete(record)">
-                            <a-button type="link" danger>删除</a-button>
+                        <a-popconfirm title="是否删除当前角色?" ok-text="确定"   cancel-text="取消" @confirm="handleDelete(record)">
+                            <a-button type="link" v-permission="'delete:role'" danger>删除</a-button>
                         </a-popconfirm>
                     </template>
                 </template>

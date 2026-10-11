@@ -49,8 +49,7 @@
 
                 <a-form-item>
                     <div class=" mt-6 w-full flex items-center justify-center">
-                        <a-button type="primary" :loading="saving" html-type="submit">保存配置</a-button>
-
+                        <a-button type="primary" :loading="saving" html-type="submit" v-permission="'edit:config:site'">保存配置</a-button>
                     </div>
                 </a-form-item>
             </a-form>

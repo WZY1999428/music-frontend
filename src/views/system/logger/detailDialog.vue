@@ -68,14 +68,14 @@
                 <!-- 请求参数 -->
                 <a-descriptions-item label="请求参数" :span="2">
                     <pre v-if="detail.reqParams"
-                        class="max-h-[240px] overflow-auto rounded bg-gray-50 p-3 text-xs">{{ formatJson(detail.reqParams) }}</pre>
+                        class="max-h-[240px] overflow-auto whitespace-pre-wrap break-all rounded bg-gray-50 p-3 text-xs">{{ formatJson(detail.reqParams) }}</pre>
                     <span v-else>-</span>
                 </a-descriptions-item>
 
                 <!-- 响应 -->
                 <a-descriptions-item label="响应结果" :span="2">
                     <pre v-if="detail.resBody"
-                        class="max-h-[300px] overflow-auto rounded bg-gray-50 p-3 text-xs">{{ formatJson(detail.resBody) }}</pre>
+                        class="max-h-[300px] overflow-auto whitespace-pre-wrap break-all rounded bg-gray-50 p-3 text-xs">{{ formatJson(detail.resBody) }}</pre>
                     <span v-else>-</span>
                 </a-descriptions-item>
 

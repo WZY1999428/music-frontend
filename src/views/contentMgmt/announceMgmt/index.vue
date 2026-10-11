@@ -24,7 +24,7 @@
     <div class="mt-2 p-2  bg-white rounded">
         <div class="p-2 bg-white rounded flex-1 min-w-[800px]">
             <div class="w-full pb-2 flex justify-end">
-                <a-button type="primary" @click="openDialog(null, false)">
+                <a-button type="primary" @click="openDialog(null, false)" v-permission="'edit:announceMgmt:detail'">
                     <template #icon>
                         <PlusOutlined />
                     </template>新增公告</a-button>
@@ -46,9 +46,12 @@
                             {{ formatDateTime(record[column.key]) }}
                         </template>
                         <template v-else-if="column.key === 'operation'">
-                            <a-button @click="openDialog(record.id, true)" type="link" primary>详情</a-button>
-                            <a-button @click="openDialog(record.id, false)" type="link" primary>编辑</a-button>
-                            <a-button type="link" @click="handleDelete(record.id)" danger>删除</a-button>
+                            <a-button v-permission="'view:announceMgmt:detail'" @click="openDialog(record.id, true)"
+                                type="link" primary>详情</a-button>
+                            <a-button v-permission="'edit:announceMgmt:detail'" @click="openDialog(record.id, false)"
+                                type="link" primary>编辑</a-button>
+                            <a-button v-permission="'delete:announceMgmt'" type="link" @click="handleDelete(record.id)"
+                                danger>删除</a-button>
                         </template>
                     </template>
                 </a-table>

@@ -29,7 +29,7 @@
 
     <div class="mt-4 p-4 bg-white rounded-lg shadow-sm">
         <a-spin tip="加载中..." :spinning="loading">
-            <div class="mb-2">
+            <div class="mb-2" v-permission="'batch:delete:file'">
                 <a-button type="primary" danger :disabled="!hasSelected" @click="handleDelete()">批量删除</a-button>
             </div>
             <a-table :dataSource="dataSource" :columns="columns" row-key="id" :pagination="pagination"
@@ -71,13 +71,15 @@
                     <!-- 6. 操作按钮：带 Icon -->
                     <template v-else-if="column.key === 'operation'">
                         <div class="flex items-center gap-1">
-                            <a-button type="link" size="small" @click="downloadFile(record)">
+                            <a-button v-permission="'download:file'" type="link" size="small"
+                                @click="downloadFile(record)">
                                 <template #icon>
                                     <DownloadOutlined />
                                 </template>
                                 下载
                             </a-button>
-                            <a-button type="link" danger size="small" @click="handleDelete(record)">
+                            <a-button v-permission="'delete:file'" type="link" danger size="small"
+                                @click="handleDelete(record)">
                                 <template #icon>
                                     <DeleteOutlined />
                                 </template>
