@@ -10,7 +10,7 @@
         </div>
     </a-upload>
     <div style="position: fixed; top: 0; left: 0; z-index: 9999;">
-        <a-image :width="200" :style="{ display: 'none'}" :preview="{ visible, onVisibleChange }" :src="previewImage" />
+        <a-image :width="200" :style="{ display: 'none' }" :preview="{ visible, onVisibleChange }" :src="previewImage" />
     </div>
 </template>
 
@@ -45,6 +45,7 @@ const props = defineProps({
     },
     savePath: {
         type: String,
+        default: ''
     },
     // 单个文件最大大小，单位 MB
     size: {
@@ -293,6 +294,13 @@ function handleChange({ file, fileList: list }) {
          *     url: "/uploads/xxx.png"
          * }
          */
+
+
+        if (response.code == 1) {
+            message.warning(response.message);
+            file.status = 'error';
+        }
+
         if (!response || response.data.id === undefined || !response.data.url) {
             message.warning(
                 '上传成功，但服务器返回的文件信息格式错误，需要 { id, url }'
@@ -302,6 +310,7 @@ function handleChange({ file, fileList: list }) {
 
             return;
         }
+
 
         /**
          * 保存后端返回的数据
