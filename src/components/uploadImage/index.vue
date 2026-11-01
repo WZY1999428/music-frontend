@@ -2,7 +2,7 @@
     <a-upload v-model:file-list="fileList" action="/admin-api/upload/public" :headers="{ authorization: getToken() }"
         :accept="accept" list-type="picture-card" :max-count="maxCount" :before-upload="beforeUpload"
         @change="handleChange" @preview="handlePreview" @remove="handleRemove" :data="{ path: savePath }">
-        <div v-if="(fileList.length < maxCount && mode === 'array') || (fileList.length === 0 && mode === 'single')">
+        <div v-if="(fileList.length < maxCount && mode === 'multiple') || (fileList.length === 0 && mode === 'single')">
             <UploadOutlined />
             <div style="margin-top: 8px">
                 上传图片
@@ -37,11 +37,11 @@ const props = defineProps({
      */
 
     // single: 单图
-    // array: 多图
+    // multiple: 多图
     mode: {
         type: String,
-        default: 'array',
-        validator: value => ['single', 'array'].includes(value)
+        default: 'multiple',
+        validator: value => ['single', 'multiple'].includes(value)
     },
     savePath: {
         type: String,

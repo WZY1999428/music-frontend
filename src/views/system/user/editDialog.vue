@@ -81,7 +81,7 @@
 <script setup>
 import { getRoleOptions } from "@/request/system/role"
 import { getDeptTree } from "@/request/system/dept"
-import Avatar from "@/views/user/avatar.vue"
+import Avatar from "@/views/userProfile/avatar.vue"
 import { getUserInfo, saveUser } from "@/request/system/user"
 import { message } from 'ant-design-vue';
 

@@ -136,8 +136,7 @@ function selectedSave(songIds) {
         confirmLoading.value = true;
         savePlaylistSong({ playlistId: props.id, songIds }).then(() => {
             message.success("保存成功")
-            show.value = false
-            emits("saveSuccess");
+            fetchSongList()
         }).finally(() => confirmLoading.value = false)
     })
 }

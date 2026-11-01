@@ -59,3 +59,12 @@ export function removePlaylistSong(params) {
         params
     })
 }
+
+
+export function getPlaylistOptions(params) {
+    return request({
+        url: '/music/playlist/options',
+        method: 'get',
+        params
+    })
+}

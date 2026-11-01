@@ -99,3 +99,12 @@ export function delLyrics(id) {
         params: { id }
     })
 }
+
+
+export function getSongOptions(params) {
+    return request({
+        url: '/music/song/options',
+        method: 'get',
+        params
+    })
+}

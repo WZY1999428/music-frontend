@@ -11,7 +11,7 @@
                     <a-col :span="12">
 
                         <a-form-item name="type" label="公告类型">
-                            <DictSelect v-model="formData.type" dictKey="NOTICE_TYPE"></DictSelect>
+                            <DictSelect v-model="formData.type" dictCode="NOTICE_TYPE"></DictSelect>
                         </a-form-item>
                     </a-col>
 

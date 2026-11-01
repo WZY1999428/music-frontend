@@ -17,7 +17,7 @@ export default [
             {
                 name: "profile",
                 path: "profile",
-                component: () => import("@/views/user/profile.vue"),
+                component: () => import("@/views/userProfile/profile.vue"),
                 meta: {
                     title: "用户信息",
                 },

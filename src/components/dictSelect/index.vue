@@ -15,7 +15,7 @@ const props = defineProps({
         type: String,
         default: "combobox"
     },
-    dictKey: {
+    dictCode: {
         type: String,
         required: true
     },
@@ -35,6 +35,6 @@ function initValue() {
     }
 }
 
-const dicts = computed(() => dictStore.getDict(props.dictKey));
+const dicts = computed(() => dictStore.getDict(props.dictCode));
 
 </script>

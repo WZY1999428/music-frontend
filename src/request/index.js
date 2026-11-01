@@ -2,7 +2,7 @@ import axios from 'axios'
 import { message } from "ant-design-vue";
 const request = axios.create({
     baseURL: '/admin-api',
-    timeout: 5000,
+    timeout: 1000*30,
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json',

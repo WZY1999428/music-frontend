@@ -69,3 +69,11 @@ export function removeAlbumSong(params) {
         params
     })
 }
+
+export function getAlbumOptions(params) {
+    return request({
+        url: '/music/album/options',
+        method: 'get',
+        params
+    })
+}

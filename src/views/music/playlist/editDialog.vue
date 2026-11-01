@@ -15,6 +15,11 @@
                         </a-form-item>
                     </a-col>
                     <a-col :span="12">
+                        <a-form-item name="tags" label="歌单标签">
+                            <DictSelect dictCode="PLAYLIST_TAG" mode="multiple" v-model="formData.tags"></DictSelect>
+                        </a-form-item>
+                    </a-col>
+                    <a-col :span="12">
                         <a-form-item name="sort" label="权重">
                             <a-input v-model:value="formData.sort" style="width: 100%" />
                         </a-form-item>
@@ -48,6 +53,7 @@
 
 <script setup>
 import uploadImage from "@/components/uploadImage/index.vue"
+import DictSelect from "@/components/dictSelect/index.vue"
 import { getPlaylistInfo, savePlaylist } from "@/request/music/playlist.js"
 import { searchArtist } from "@/request/music/artist.js"
 
@@ -125,6 +131,7 @@ function initForm(data = {}) {
     formData.value = {
         title: data.title,
         cover: data.cover,
+        tags: data.tags ?? [],
         sort: data.sort ?? 1,
         isHot: data.isHot ?? 0,
         enabled: data.enabled ?? 1,

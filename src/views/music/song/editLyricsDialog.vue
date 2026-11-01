@@ -7,13 +7,13 @@
                     <a-input v-model:value.trim="formData.title" placeholder="请输入歌曲名称" />
                 </a-form-item>
                 <a-form-item name="lang" label="歌词语言">
-                    <DictSelect dictKey="LYRICS_LANGUAGE" v-model="formData.lang" />
+                    <DictSelect dictCode="LYRICS_LANGUAGE" v-model="formData.lang" />
                 </a-form-item>
                 <a-form-item name="sort" label="排序">
                     <a-input-number style="width:100%" v-model:value="formData.sort" placeholder="请输入排序" />
                 </a-form-item>
                 <a-form-item name="content" label="歌词内容">
-                    <a-textarea v-model:value.trim="formData.content" placeholder="请输入歌词内容" :rows="10" />
+                    <a-textarea v-model:value.trim="formData.content" @input="handleContentInput" placeholder="请输入歌词内容" :rows="10" />
                 </a-form-item>
                 <a-form-item name="enabled" label="是否启用">
                     <a-switch v-model:checked="formData.enabled" :checkedValue="1" :unCheckedValue="0" />
@@ -69,6 +69,11 @@ function submit() {
     })
 }
 
+function handleContentInput() {
+    formData.value.content = formData.value.content
+        .replace(/\r\n/g, '\n')
+        .replace(/\\+n/g, '\n');
+}
 
 function fetchInfo() {
     detailLoading.value = true;

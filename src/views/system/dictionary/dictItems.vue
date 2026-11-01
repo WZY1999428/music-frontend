@@ -26,12 +26,14 @@
                     <template v-if="column.key === 'enabled'">
                         {{ record[column.key] == 1 ? "已启用" : "已禁用" }}
                     </template>
-                    <template v-if="['createdAt','updatedAt'].includes(column.key)">
+                    <template v-if="['createdAt', 'updatedAt'].includes(column.key)">
                         {{ formatDateTime(record[column.key]) }}
                     </template>
                     <template v-else-if="column.key === 'operation'">
-                        <a-button v-permission="'view:dictionary:dictItems'" type="link" @click="openDialog(record.id, true)" primary>详情</a-button>
-                        <a-button v-permission="'edit:dictionary:dictItems'" type="link" @click="openDialog(record.id, false)" primary>编辑</a-button>
+                        <a-button v-permission="'view:dictionary:dictItems'" type="link"
+                            @click="openDialog(record.id, true)" primary>详情</a-button>
+                        <a-button v-permission="'edit:dictionary:dictItems'" type="link"
+                            @click="openDialog(record.id, false)" primary>编辑</a-button>
                         <a-popconfirm title="是否删除当前角色?" ok-text="确定" cancel-text="取消" @confirm="handleDelete(record)">
                             <a-button v-permission="'delete:dictionary'" type="link" danger>删除</a-button>
                         </a-popconfirm>
@@ -67,6 +69,11 @@ const columns = reactive([
         title: '字典名称',
         dataIndex: 'title',
         key: 'title',
+    },
+    {
+        title: '字典值',
+        dataIndex: 'value',
+        key: 'value',
     },
     {
         title: '状态',

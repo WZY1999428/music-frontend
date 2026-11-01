@@ -35,12 +35,12 @@
                     </a-col>
                     <a-col :span="12">
                         <a-form-item name="type" label="专辑类型">
-                            <DictSelect v-model="formData.type" dictKey="ALBUM_TYPE"></DictSelect>
+                            <DictSelect v-model="formData.type" dictCode="ALBUM_TYPE"></DictSelect>
                         </a-form-item>
                     </a-col>
                     <a-col :span="12">
                         <a-form-item name="genre" label="流派/风格">
-                            <DictSelect v-model="formData.genre" dictKey="MUSIC_GENRE" mode="multiple"></DictSelect>
+                            <DictSelect v-model="formData.genre" dictCode="MUSIC_GENRE" mode="multiple"></DictSelect>
                         </a-form-item>
                     </a-col>
                     <a-col :span="12">

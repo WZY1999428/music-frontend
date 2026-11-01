@@ -39,3 +39,10 @@ export function delAnnounceMgmt(id) {
 
 
 
+export function getAnnounceMgmtOptions(params) {
+    return request({
+        url: '/contentMgmt/announceMgmt/options',
+        method: 'get',
+        params
+    })
+}

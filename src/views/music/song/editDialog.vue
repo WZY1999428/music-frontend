@@ -24,7 +24,13 @@
                     </a-col>
                     <a-col :span="12">
                         <a-form-item name="mvUrl" label="歌曲mv">
-                            <uploadFile v-model="formData.mvUrl" mode="single" savePath="video" accept="video/mp4,video/ogg,video/webm" :size="150"></uploadFile>
+                            <uploadFile v-model="formData.mvUrl" mode="single" savePath="video"
+                                accept="video/mp4,video/ogg,video/webm" :size="150"></uploadFile>
+                        </a-form-item>
+                    </a-col>
+                    <a-col :span="12">
+                        <a-form-item name="songTypes" label="音乐类型">
+                            <DictSelect dictCode="MUSIC_CATEGORY" v-model="formData.songTypes" mode="multiple" />
                         </a-form-item>
                     </a-col>
                     <a-col :span="12">
@@ -75,7 +81,7 @@
                                                 </div>
                                             </div>
                                             <!-- 音频品质 -->
-                                            <DictSelect dictKey="AUDIO_QUALITY" v-model="audio.quality"
+                                            <DictSelect dictCode="AUDIO_QUALITY" v-model="audio.quality"
                                                 placeholder="音频品质" style="width: 120px" />
                                             <!-- 操作 -->
                                             <a-button @click="selectAudio(audio)">
@@ -249,11 +255,12 @@ function initForm(data = {}) {
         title: data.title,
         cover: data.cover,
         mvUrl: data.mvUrl,
+        enabled: data.enabled ?? 1,
+        songTypes: data.songTypes,
         publishDate: data.publishDate,
         singerList: data.singerList ?? []
     }
 
-    console.log(data.singerList);
 
     if (data.audioList) audioList.push(...data.audioList)
 }

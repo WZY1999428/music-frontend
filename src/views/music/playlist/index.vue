@@ -45,10 +45,6 @@
                                 {{ getDictName("MUSIC_GENRE", genre) }}
                             </a-tag>
                         </template>
-                        <!-- ALBUM_TYPE -->
-                        <template v-else-if="column.key === 'type'">
-                            {{ getDictName("ALBUM_TYPE", record[column.key]) }}
-                        </template>
                         <template v-else-if="column.key === 'isHot'">
                             {{ record[column.key] == 1 ? '是' : '否' }}
                         </template>
@@ -173,7 +169,7 @@ function handleDelete(id) {
     Modal.confirm({
         title: '提示?',
         icon: h(ExclamationCircleOutlined),
-        content: '确定要删除当前专辑吗',
+        content: '确定要删除当前歌单吗',
         okText: '确定',
         okType: 'danger',
         cancelText: '取消',

@@ -26,7 +26,7 @@
             </a-table>
         </a-spin>
     </a-modal>
-    <EditLyricsDialog v-model="editLyricsDialogShow" :id="lyricsId" :songId="props.id"></EditLyricsDialog>
+    <EditLyricsDialog v-model="editLyricsDialogShow" :id="lyricsId" :songId="props.id" @saveSuccess="fetchSongList"></EditLyricsDialog>
 </template>
 
 <script setup>

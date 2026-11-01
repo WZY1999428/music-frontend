@@ -26,12 +26,12 @@
                     </a-col>
                     <a-col :span="12">
                         <a-form-item name="gender" label="性别">
-                            <DictSelect v-model="formData.gender" dictKey="ARTIST_GENDER"></DictSelect>
+                            <DictSelect v-model="formData.gender" dictCode="ARTIST_GENDER"></DictSelect>
                         </a-form-item>
                     </a-col>
                     <a-col :span="12">
                         <a-form-item name="area" label="地区">
-                            <DictSelect v-model="formData.area" dictKey="ARTIST_REGION"></DictSelect>
+                            <DictSelect v-model="formData.area" dictCode="ARTIST_REGION"></DictSelect>
                         </a-form-item>
                     </a-col>
                     <a-col :span="12">
