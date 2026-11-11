@@ -36,7 +36,7 @@
                     </a-col>
                     <a-col :span="12">
                         <a-form-item name="publishDate" label="发布时间">
-                            <a-date-picker v-model:value="formData.publishDate" style="width:100%"
+                            <a-date-picker v-model:value="formData.publishDate" style="width:100%" 
                                 value-format="YYYY-MM-DD" />
                         </a-form-item>
                     </a-col>
@@ -173,6 +173,10 @@ const emits = defineEmits(["saveSuccess"])
 
 const detailLoading = ref(false)
 const confirmLoading = ref(false)
+
+function input(){
+
+}
 
 function submit() {
     formRef.value?.validate().then(() => {

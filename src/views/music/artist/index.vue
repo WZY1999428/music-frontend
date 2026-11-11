@@ -68,7 +68,9 @@
             </a-spin>
         </div>
     </div>
-    <editDialog v-model="show" :id="agreementsId" :readonly="readonly" @saveSuccess="fetchTableData()"></editDialog>
+
+    <editDialog v-model="show" :id="agreementsId" :readonly="readonly"
+        @saveSuccess="fetchTableData({ current: queryForm.pageIndex, pageSize: queryForm.pageSize })"></editDialog>
 </template>
 
 <script setup>
