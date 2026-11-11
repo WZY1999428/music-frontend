@@ -1,5 +1,6 @@
 <template>
-    <a-modal v-model:open="show" :title="title" :confirmLoading="confirmLoading" :width="900" destroyOnClose>
+    <a-modal v-model:open="show" :title="title" :confirmLoading="confirmLoading" :width="900" destroyOnClose
+        :mask-closable="false">
         <a-spin tip="加载中..." :spinning="detailLoading">
             <a-form ref="formRef" :rules="rulesRef" :model="formData" :label-col="{ style: { width: '90px' } }"
                 :disabled="readonly">
@@ -58,34 +59,47 @@
                                     新增音频
                                 </a-button>
                             </div>
+                            <div class="max-h-[600px] overflow-y-auto rounded-lg transition-all" :class="{
+                                'border-2 border-dashed border-blue-500 bg-blue-50/50': isDragging,
+                                'border-2 border-transparent': !isDragging
+                            }" @dragenter.prevent="handleDragEnter" @dragover.prevent
+                                @dragleave.prevent="handleDragLeave" @drop.prevent="handleDrop">
+                                <!-- 拖拽提示 -->
+                                <div v-if="isDragging"
+                                    class="flex flex-col items-center justify-center py-10 text-blue-500">
+                                    <InboxOutlined class="text-4xl mb-3" />
+                                    <div class="font-medium">释放文件，开始上传</div>
+                                    <div class="text-xs mt-2">支持 MP3 / WAV / FLAC / OGG</div>
+                                </div>
 
-                            <div class="max-h-[600px] overflow-y-auto">
-                                <div class="flex flex-col gap-3">
+                                <div v-else class="flex flex-col gap-3 p-1">
+
+                                    <!-- 原本的音频列表 -->
                                     <div v-for="(audio, index) in audioList" :key="audio.id ?? index"
                                         class="border rounded-lg p-3">
-                                        <!-- 文件信息 -->
                                         <div class="flex items-center gap-3">
-                                            <!-- 音频图标 -->
                                             <div
                                                 class="w-10 h-10 flex items-center justify-center rounded bg-blue-50 text-blue-500">
                                                 <SoundOutlined />
                                             </div>
 
-                                            <!-- 文件名 -->
                                             <div class="flex-1 min-w-0">
-                                                <div class="truncate">{{ audio.filename || '未选择音频' }}</div>
+                                                <div class="truncate">
+                                                    {{ audio.filename || '未选择音频' }}
+                                                </div>
+
                                                 <div class="text-gray-400 text-xs mt-1">
                                                     {{ audio.format || '--' }}
                                                     <span v-if="audio.bitrate"> · {{ audio.bitrate }}kbps</span>
-                                                    <span v-if="audio.size">· {{ formatSize(audio.size) }}</span>
+                                                    <span v-if="audio.size"> · {{ formatFileSize(audio.size) }}</span>
                                                 </div>
                                             </div>
-                                            <!-- 音频品质 -->
+
                                             <DictSelect dictCode="AUDIO_QUALITY" v-model="audio.quality"
                                                 placeholder="音频品质" style="width: 120px" />
-                                            <!-- 操作 -->
-                                            <a-button @click="selectAudio(audio)">
-                                                <UploadOutlined></UploadOutlined>
+
+                                            <a-button @click="selectAudio(audio)" :loading="audio.loading">
+                                                <UploadOutlined />
                                                 选择音乐
                                             </a-button>
 
@@ -93,10 +107,23 @@
                                                 <DeleteOutlined />
                                             </a-button>
                                         </div>
+
+                                        <!-- 上传状态
+                                        <a-progress v-if="audio.loading" :percent="audio.progress || 0" size="small"
+                                            status="active" :show-info="false" />
+                                         -->
                                     </div>
-                                    <!-- 空状态 -->
                                     <a-empty v-if="audioList.length === 0" description="暂无音频文件"
                                         :image="Empty.PRESENTED_IMAGE_SIMPLE" />
+
+                                    <!-- 拖拽入口 -->
+                                    <div
+                                        class="border border-dashed rounded-lg py-6 flex flex-col items-center text-gray-400 cursor-pointer hover:border-blue-400 hover:text-blue-500 transition-colors">
+                                        <InboxOutlined class="text-2xl mb-2" />
+                                        <span>拖拽音频文件到这里，或点击「新增音频」</span>
+                                        <span class="text-xs mt-1">支持 MP3 / WAV / FLAC / OGG，单个文件 1MB ~ 100MB</span>
+                                    </div>
+
                                 </div>
                             </div>
                         </a-form-item>
@@ -114,12 +141,11 @@
     </a-modal>
 </template>
 
-
 <script setup>
 import uploadImage from "@/components/uploadImage/index.vue"
 import uploadFile from "@/components/uploadFile/index.vue"
 import DictSelect from "@/components/dictSelect/index.vue"
-import { PlusOutlined, DeleteOutlined, SoundOutlined, UploadOutlined } from '@ant-design/icons-vue'
+import { PlusOutlined, DeleteOutlined, SoundOutlined, UploadOutlined, InboxOutlined } from '@ant-design/icons-vue'
 import { getSongInfo, saveSong, uploadAudio } from "@/request/music/song.js"
 import { searchArtist } from "@/request/music/artist.js"
 import { message, Empty } from 'ant-design-vue';
@@ -142,7 +168,7 @@ const rulesRef = reactive({
     name: { required: true, message: '请输入歌手名称', },
 })
 
-const title = computed(() => (props.id && props.readonly) ? '歌手详情' : props.id ? '编辑歌手' : '新增歌手')
+const title = computed(() => (props.id && props.readonly) ? '歌曲详情' : props.id ? '编辑歌曲' : '新增歌曲')
 const emits = defineEmits(["saveSuccess"])
 
 const detailLoading = ref(false)
@@ -196,56 +222,141 @@ function addAudio() {
         filename: null,
         fileId: null,
         format: null,
-        quality: null,
+        quality: "2",
         bitrate: null,
         sampleRate: null,
         bitDepth: null,
+        loading: false
     })
 }
 
 const ACCEPT = ["audio/mp3", "audio/wav", "audio/flac", "audio/ogg"]
 const exts = ["mp3", "flac", "wav", "ogg"]
+
 function selectAudio(row) {
-    const fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.accept = ACCEPT.join(',');
-    fileInput.onchange = (e) => {
-        const file = e.target.files[0];
+    const fileInput = document.createElement('input')
+
+    fileInput.type = 'file'
+    fileInput.accept = ACCEPT.join(',')
+
+    fileInput.onchange = async (e) => {
+        const file = e.target.files?.[0]
+
         if (file) {
-            if (!exts.includes(file.name.split('.').pop().toLowerCase())) {
-                message.error('请选择正确的音频文件');
-                return;
-            }
+            await uploadAudioFile(row, file)
+        }
 
-            if (file.size < 1024 * 1024 * 1) {
-                message.error('文件大小不能小于1MB');
-                return;
-            }
+        fileInput.remove()
+    }
 
-            if (file.size > 1024 * 1024 * 100) {
-                message.error('文件大小不能超过100MB');
-                return;
-            }
+    fileInput.click()
+}
 
-            row.loading = true;
 
-            const formData = new FormData();
-            formData.append('song', file);
-            uploadAudio(formData).then(res => {
-                row.url = res.url;
-                row.filename = res.filename;
-                row.fileId = res.fileId;
-                row.duration = res.duration;
-                row.format = res.codec;
-                row.bitrate = res.bitrate;
-                row.sampleRate = res.sampleRate;
-                row.bitDepth = res.bitsPerSample;
-            }).finally(() => {
-                row.loading = false;
+// 校验文件
+function validateAudio(file) {
+    const ext = file.name.split('.').pop().toLowerCase()
+
+    if (!exts.includes(ext)) {
+        message.error(`${file.name}：请选择正确的音频文件`)
+        return false
+    }
+
+    if (file.size < 1024 * 1024) {
+        message.error(`${file.name}：文件大小不能小于1MB`)
+        return false
+    }
+
+    if (file.size > 1024 * 1024 * 100) {
+        message.error(`${file.name}：文件大小不能超过100MB`)
+        return false
+    }
+
+    return true
+}
+
+// 上传音频
+async function uploadAudioFile(row, file) {
+    if (!validateAudio(file)) return
+
+    row.loading = true
+
+    const fData = new FormData()
+    fData.append('song', file)
+
+    try {
+        const res = await uploadAudio(fData)
+
+        if (!formData.value.title) {
+            formData.value.title = res.title
+        }
+
+        if (!formData.value.singerList?.length) {
+            formData.value.singerList = res.artists.map(item => item.id)
+
+            // 填充歌手下拉选项，避免显示空白
+            res.artists.forEach(item => {
+                if (!singerOptions.some(option => option.value === item.id)) {
+                    singerOptions.push({
+                        label: item.name,
+                        value: item.id
+                    })
+                }
             })
         }
-    };
-    fileInput.click();
+
+        row.url = res.url
+        row.filename = res.filename
+        row.fileId = res.fileId
+        row.duration = res.duration
+        row.format = res.codec
+        row.bitrate = res.bitrate
+        row.sampleRate = res.sampleRate
+        row.bitDepth = res.bitsPerSample
+        row.size = file.size
+
+    } catch (err) {
+        message.error(`${file.name} 上传失败`)
+        console.error(err)
+    } finally {
+        row.loading = false
+    }
+}
+
+const isDragging = ref(false)
+let dragCounter = 0
+
+// 拖拽进入
+function handleDragEnter(e) {
+    if (!e.dataTransfer?.types.includes('Files')) return
+
+    dragCounter++
+    isDragging.value = true
+}
+
+// 拖拽离开
+function handleDragLeave() {
+    dragCounter--
+
+    if (dragCounter <= 0) {
+        dragCounter = 0
+        isDragging.value = false
+    }
+}
+
+// 放下文件
+function handleDrop(e) {
+    dragCounter = 0
+    isDragging.value = false
+
+    const files = Array.from(e.dataTransfer?.files || [])
+
+    if (!files.length) return
+
+    files.forEach(file => {
+        addAudio()
+        uploadAudioFile(audioList[0], file)
+    })
 }
 
 
