@@ -52,3 +52,12 @@ export function searchArtist(keyword) {
     })
 }
 
+
+export function artistByIds(ids) {
+    return request({
+        url: '/music/artist/ids',
+        method: 'get',
+        params: { ids }
+    })
+}
+

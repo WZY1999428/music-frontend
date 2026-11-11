@@ -147,7 +147,7 @@ import uploadFile from "@/components/uploadFile/index.vue"
 import DictSelect from "@/components/dictSelect/index.vue"
 import { PlusOutlined, DeleteOutlined, SoundOutlined, UploadOutlined, InboxOutlined } from '@ant-design/icons-vue'
 import { getSongInfo, saveSong, uploadAudio } from "@/request/music/song.js"
-import { searchArtist } from "@/request/music/artist.js"
+import { searchArtist, artistByIds } from "@/request/music/artist.js"
 import { message, Empty } from 'ant-design-vue';
 import { reactive } from "vue"
 const props = defineProps({
@@ -203,6 +203,14 @@ function fetchSearchArtist(kwd) {
     })
 }
 
+function fetchArtistByIds(ids) {
+    artistByIds(ids).then(artist => {
+        singerOptions.splice(0, singerOptions.length, ...artist.map(item => ({ label: item.name, value: item.id })))
+    }).catch(err => {
+        console.log(err);
+    })
+}
+
 watch(() => show.value, (newVal) => {
     initForm()
     if (newVal) {
@@ -241,7 +249,6 @@ function selectAudio(row) {
 
     fileInput.onchange = async (e) => {
         const file = e.target.files?.[0]
-
         if (file) {
             await uploadAudioFile(row, file)
         }
@@ -293,7 +300,6 @@ async function uploadAudioFile(row, file) {
 
         if (!formData.value.singerList?.length) {
             formData.value.singerList = res.artists.map(item => item.id)
-
             // 填充歌手下拉选项，避免显示空白
             res.artists.forEach(item => {
                 if (!singerOptions.some(option => option.value === item.id)) {
@@ -371,7 +377,11 @@ function initForm(data = {}) {
         publishDate: data.publishDate,
         singerList: data.singerList ?? []
     }
+   
 
+    if(data.singerList && data.singerList.length) {
+        fetchArtistByIds(data.singerList)
+    }
 
     if (data.audioList) audioList.push(...data.audioList)
 }
