@@ -10,8 +10,8 @@
                         </a-form-item>
                     </a-col>
                     <a-col :span="12">
-                        <a-form-item name="realName" label="真实姓名">
-                            <a-input v-model:value.trim="formData.realName" placeholder="请输入真实姓名" />
+                        <a-form-item name="alias" label="真实姓名">
+                            <a-input v-model:value.trim="formData.alias" placeholder="请输入真实姓名" />
                         </a-form-item>
                     </a-col>
                     <a-col :span="12">
@@ -83,7 +83,7 @@ const formData = ref({})
 const formRef = ref(null)
 const rulesRef = reactive({
     name: { required: true, message: '请输入歌手名称', },
-    realName: { required: true, message: '请输入真实姓名', },
+    alias: { required: true, message: '请输入真实姓名', },
     avatar: { required: true, message: '请上传歌手头像', },
     cover: { required: true, message: '请上传歌手封面', },
     gender: { required: true, message: '请选择性别', },
@@ -126,7 +126,7 @@ watch(() => show.value, (newVal) => {
 function initForm(data = {}) {
     formData.value = {
         name: data.name,
-        realName: data.realName,
+        alias: data.alias,
         avatar: data.avatar,
         cover: data.cover,
         gender: data.gender,
