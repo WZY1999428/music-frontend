@@ -174,10 +174,6 @@ const emits = defineEmits(["saveSuccess"])
 const detailLoading = ref(false)
 const confirmLoading = ref(false)
 
-function input(){
-
-}
-
 function submit() {
     formRef.value?.validate().then(() => {
         confirmLoading.value = true;

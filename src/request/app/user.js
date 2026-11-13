@@ -48,3 +48,37 @@ export function delAppUser(id) {
 
 
 
+export function getUserPlaylist(params) {
+    return request({
+        url: '/app/user/playlist',
+        method: 'get',
+        params
+    })
+}
+
+
+
+
+export function getUserFavorite(params) {
+    return request({
+        url: '/app/user/favorite',
+        method: 'get',
+        params
+    })
+}
+
+
+
+
+
+
+export function getUserPlayHistory(params) {
+    return request({
+        url: '/app/user/playHistory',
+        method: 'get',
+        params
+    })
+}
+
+
+

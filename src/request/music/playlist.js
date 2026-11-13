@@ -1,10 +1,11 @@
 import request from ".."
 
 
-export function getPlaylist() {
+export function getPlaylist(params) {
     return request({
         url: '/music/playlist/list',
         method: 'get',
+        params
     })
 }
 

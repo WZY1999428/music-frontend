@@ -5,17 +5,17 @@
             class="shadow-sm rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 text-white overflow-hidden relative">
             <div class="flex items-center justify-between relative z-10 py-2">
                 <div class="space-y-2">
-                    <h2 class="text-2xl font-bold text-white mb-1">早安，管理员！👋</h2>
-                    <p class="text-blue-100 text-sm">欢迎回到后台管理系统，今天也是充满活力的一天！</p>
+                    <h2 class="text-2xl font-bold text-black mb-1">早安，管理员！👋</h2>
+                    <p class="text-blue-500 text-sm">欢迎回到后台管理系统，今天也是充满活力的一天！</p>
                 </div>
                 <div class="hidden md:flex space-x-6 text-right">
                     <div>
-                        <div class="text-blue-100 text-xs">系统运行时间</div>
-                        <div class="text-xl font-semibold text-white mt-1">128 天</div>
+                        <div class="text-blue-500 text-xs">系统运行时间</div>
+                        <div class="text-xl font-semibold text-blue-600 mt-1">128 天</div>
                     </div>
                     <div>
-                        <div class="text-blue-100 text-xs">今日访问量</div>
-                        <div class="text-xl font-semibold text-white mt-1">1,429</div>
+                        <div class="text-blue-500 text-xs">今日访问量</div>
+                        <div class="text-xl font-semibold text-blue-600 mt-1">1,429</div>
                     </div>
                 </div>
             </div>
@@ -110,11 +110,11 @@
                     <div class="space-y-2 text-xs">
                         <div class="flex justify-between py-1 border-b border-gray-50">
                             <span class="text-gray-400">框架版本</span>
-                            <span class="text-gray-700 font-medium">Vue 3.x + Antd</span>
+                            <span class="text-gray-700 font-medium">Vue 3.5.42 + Antd 4.2.6</span>
                         </div>
                         <div class="flex justify-between py-1 border-b border-gray-50">
                             <span class="text-gray-400">构建引擎</span>
-                            <span class="text-gray-700 font-medium">Rsbuild / Vite</span>
+                            <span class="text-gray-700 font-medium">Rsbuild / SWC</span>
                         </div>
                         <div class="flex justify-between py-1 border-b border-gray-50">
                             <span class="text-gray-400">当前环境</span>

@@ -2,16 +2,16 @@
     <div class="p-4 bg-white rounded">
         <a-form ref="formRef" :model="queryForm" layout="inline" @finish="fetchTableData()">
             <a-form-item label="歌手名称" name="title">
-                <a-input v-model:value="queryForm.title" placeholder="请输入菜单名称 " style="width: 280px;" />
+                <a-input v-model:value="queryForm.title" placeholder="请输入歌手名称 " style="width: 280px;" />
             </a-form-item>
-            <a-form-item label="歌手地区" name="path">
-                <a-input v-model:value="queryForm.path" placeholder="请输入菜单地址 " style="width: 280px;" />
+            <a-form-item label="歌手地区" name="area">
+                <DictSelect v-model="queryForm.area" placeholder="请选择" dictCode="ARTIST_REGION" style="width: 280px;" />
             </a-form-item>
-            <a-form-item label="日期范围" name="path">
-                <a-input v-model:value="queryForm.path" placeholder="请输入菜单地址 " style="width: 280px;" />
+            <a-form-item label="日期范围" name="dateRange">
+                <a-range-picker v-model:value="queryForm.dateRange" style="width: 280px;" value-format="YYYY-MM-DD" />
             </a-form-item>
-            <a-form-item label="状态" name="enabled">
-                <a-select v-model:value="queryForm.enabled" placeholder="请选择菜单状态" style="width: 280px;">
+            <a-form-item label="状态" name="status">
+                <a-select v-model:value="queryForm.status" placeholder="请选择菜单状态" style="width: 280px;">
                     <a-select-option :value="1">启用</a-select-option>
                     <a-select-option :value="0">禁用</a-select-option>
                 </a-select>
@@ -78,6 +78,7 @@
 
 import { PlusOutlined, ExclamationCircleOutlined } from "@ant-design/icons-vue"
 import { Modal, message } from 'ant-design-vue';
+import DictSelect from "@/components/dictSelect/index.vue"
 import { getArtistList, delArtist } from "@/request/music/artist.js"
 import editDialog from "./editDialog.vue"
 const total = ref(0)
@@ -86,7 +87,10 @@ const readonly = ref(false);
 const loading = ref(false)
 const formRef = ref(null)
 const queryForm = reactive({
-    agreementsId: null,
+    title: "",
+    status: null,
+    dateRange: [],
+    area: null,
     pageIndex: 1,
     pageSize: 10
 });

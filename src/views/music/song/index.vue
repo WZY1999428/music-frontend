@@ -8,10 +8,10 @@
                 <a-input v-model:value="queryForm.artist" placeholder="请输入专辑名称 " style="width: 280px;" />
             </a-form-item>
             <a-form-item label="日期范围" name="dateRange">
-                <a-range-picker v-model:value="queryForm.dateRange" style="width: 280px;" />
+                <a-range-picker v-model:value="queryForm.dateRange" style="width: 280px;" value-format="YYYY-MM-DD" />
             </a-form-item>
-            <a-form-item label="状态" name="enabled">
-                <a-select v-model:value="queryForm.enabled" placeholder="请选择菜单状态" style="width: 280px;">
+            <a-form-item label="状态" name="status">
+                <a-select v-model:value="queryForm.status" placeholder="请选择菜单状态" style="width: 280px;">
                     <a-select-option :value="1">启用</a-select-option>
                     <a-select-option :value="0">禁用</a-select-option>
                 </a-select>
@@ -34,7 +34,7 @@
             </div>
             <a-spin tip="加载中..." :spinning="loading">
                 <a-table :dataSource="dataSource" :columns="columns" :pagination="pagination" @change="fetchTableData"
-                    row-key="id">
+                    :scroll="{ x: 1500, }" row-key="id">
                     <template #bodyCell="{ column, record }">
                         <template v-if="column.key === 'cover'">
                             <a-image :width="36" :height="36" :src="record[column.key]"
@@ -93,6 +93,8 @@ const formRef = ref(null)
 const queryForm = reactive({
     artist: null,
     title: null,
+    daterange: [],
+    status: null,
     songId: null,
     pageIndex: 1,
     pageSize: 10
@@ -111,6 +113,7 @@ const columns = reactive([
         title: '歌曲名称',
         dataIndex: 'title',
         key: 'title',
+        width: 200,
     },
     {
         title: '歌手',
@@ -126,6 +129,11 @@ const columns = reactive([
         title: '创建人',
         dataIndex: 'createUser',
         key: 'createUser',
+    },
+    {
+        title: '状态',
+        dataIndex: 'enabled',
+        key: 'enabled',
     },
     {
         title: '创建日期',

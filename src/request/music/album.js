@@ -1,10 +1,11 @@
 import request from ".."
 
 
-export function getAlbumList() {
+export function getAlbumList(params) {
     return request({
         url: '/music/album/list',
         method: 'get',
+        params
     })
 }
 

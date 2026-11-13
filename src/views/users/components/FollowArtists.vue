@@ -1,22 +1,16 @@
 <template>
-    <a-table :dataSource="dataSource" :columns="columns" :pagination="pagination" @change="fetchTableData"
-        row-key="id">
+    <a-table :dataSource="dataSource" :columns="columns" :scroll="{ x: 1000 }" :pagination="pagination"
+        @change="fetchTableData" row-key="id">
         <template #bodyCell="{ column, record }">
             <template v-if="column.key === 'avatar'">
                 <a-image :width="36" :height="36" :src="record.avatar"
                     class="rounded object-cover border flex-shrink-0" />
             </template>
-            <template v-else-if="column.key === 'enabled'">
-                {{ record[column.key] == 1 ? "已启用" : "已禁用" }}
-            </template>
-            <template v-else-if="column.key === 'area'">
+            <template v-if="column.key === 'area'">
                 {{ getDictName("ARTIST_REGION", record[column.key]) }}
             </template>
-            <template v-else-if="column.key === 'gender'">
+            <template v-if="column.key === 'gender'">
                 {{ getDictName("ARTIST_GENDER", record[column.key]) }}
-            </template>
-            <template v-else-if="column.key === 'isHot'">
-                {{ record[column.key] == 1 ? '是' : '否' }}
             </template>
             <template v-if="['createdAt', 'updatedAt'].includes(column.key)">
                 {{ formatDateTime(record[column.key]) }}
@@ -26,8 +20,7 @@
 </template>
 
 <script setup>
-import { PlusOutlined, ExclamationCircleOutlined } from "@ant-design/icons-vue"
-import { Modal, message } from 'ant-design-vue';
+import { getUserFavorite } from "@/request/app/user"
 const dataSource = reactive([]);
 const columns = reactive([
     {
@@ -42,38 +35,55 @@ const columns = reactive([
         key: 'name',
     },
     {
+        title: '歌手别名',
+        dataIndex: 'alias',
+        key: 'alias',
+        width: 200,
+    },
+    {
         title: '地区',
         dataIndex: 'area',
         key: 'area',
+        width: 100,
     },
     {
         title: '性别',
         dataIndex: 'gender',
         key: 'gender',
+        width: 100,
     },
     {
-        title: '热门歌手',
-        dataIndex: 'isHot',
-        key: 'isHot',
-    },
-    {
-        title: '创建人',
-        dataIndex: 'createUser',
-        key: 'createUser',
-    },
-    {
-        title: '创建日期',
+        title: '收藏日期',
         dataIndex: 'createdAt',
         key: 'createdAt',
+        width: 200,
     },
-    {
-        title: '更新日期',
-        dataIndex: 'updatedAt',
-        key: 'updatedAt',
-    }
 ]);
+const total = ref(0)
+const loading = ref(false)
+const props = defineProps({ userId: Number })
+const queryForm = reactive({
+    userId: props.userId,
+    type: "artist",
+    pageIndex: 1,
+    pageSize: 10
+});
+const pagination = computed(() => ({
+    total: total.value,
+    current: queryForm.pageIndex,
+    pageSize: queryForm.pageSize,
+}));
+fetchTableData()
 
-
+function fetchTableData({ current = 1, pageSize = 10 } = {}) {
+    queryForm.pageIndex = current;
+    queryForm.pageSize = pageSize;
+    loading.value = true;
+    getUserFavorite(queryForm).then(res => {
+        dataSource.splice(0, dataSource.length, ...res.list)
+        total.value = res.total
+    }).finally(() => loading.value = false)
+}
 
 </script>
 

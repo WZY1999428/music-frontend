@@ -5,10 +5,10 @@
                 <a-input v-model:value="queryForm.title" placeholder="请输入专辑名称 " style="width: 280px;" />
             </a-form-item>
             <a-form-item label="日期范围" name="dateRange">
-                <a-range-picker v-model:value="queryForm.dateRange" style="width: 280px;" />
+                <a-range-picker v-model:value="queryForm.dateRange" style="width: 280px;" value-format="YYYY-MM-DD" />
             </a-form-item>
-            <a-form-item label="状态" name="enabled">
-                <a-select v-model:value="queryForm.enabled" placeholder="请选择菜单状态" style="width: 280px;">
+            <a-form-item label="状态" name="status">
+                <a-select v-model:value="queryForm.status" placeholder="请选择菜单状态" style="width: 280px;">
                     <a-select-option :value="1">启用</a-select-option>
                     <a-select-option :value="0">禁用</a-select-option>
                 </a-select>
@@ -96,7 +96,9 @@ const readonly = ref(false);
 const loading = ref(false)
 const formRef = ref(null)
 const queryForm = reactive({
-    albumId: null,
+    title: "",
+    status: null,
+    dateRange: [],
     pageIndex: 1,
     pageSize: 10
 });

@@ -1,5 +1,5 @@
 <template>
-    <a-modal v-model:open="show" title=" " :confirmLoading="confirmLoading" :width="1200" destroyOnClose>
+    <a-modal v-model:open="show" title=" " :width="1200" destroyOnClose>
         <a-spin tip="加载中..." :spinning="detailLoading">
             <div class="user-detail">
                 <!-- 基本资料 -->
@@ -138,9 +138,9 @@ const show = defineModel({
     default: false
 })
 const detailLoading = ref(false)
-const confirmLoading = ref(false)
 
 watch(() => show.value, (newVal) => {
+    activeKey.value = "create"
     if (newVal && props.id) {
         detailLoading.value = true
         getAppUserDetail(props.id).then(data => {
@@ -150,7 +150,6 @@ watch(() => show.value, (newVal) => {
         })
     }
 });
-
 </script>
 
 <style lang="scss" scoped>
