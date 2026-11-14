@@ -1,7 +1,7 @@
 <template>
 
     <div class="h-full">
-        <div class="w-full h-[80px] flex items-center justify-center px-4">
+        <div class="w-full h-[80px] flex items-center justify-center px-4 py-2">
             <img :src="config?.logo" class="max-w-full max-h-full object-contain" alt="Logo" />
         </div>
         <a-menu v-model:openKeys="state.openKeys" v-model:selectedKeys="state.selectedKeys" mode="inline" theme="light"

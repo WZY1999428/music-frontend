@@ -4,22 +4,22 @@
             <a-tab-pane key="SiteConfig" tab="基础/站点设置">
                 <SiteConfig />
             </a-tab-pane>
-            <!-- <a-tab-pane key="SecurityConfig" tab="安全与登录策略" force-render>
-                <SecurityConfig />
+            <a-tab-pane key="ReleaseConfig" tab="发布配置" force-render>
+                <ReleaseConfig />
             </a-tab-pane>
-            <a-tab-pane key="UploadConfig" tab="上传与存储配置">
+            <!-- <a-tab-pane key="UploadConfig" tab="上传与存储配置">
                 <UploadConfig />
             </a-tab-pane>
             <a-tab-pane key="PushConfig" tab="消息推送">
                 <PushConfig />
-            </a-tab-pane> -->
+            </a-tab-pane>  -->
         </a-tabs>
     </div>
 </template>
 
 <script setup>
 import SiteConfig from './SiteConfig.vue'
-// import SecurityConfig from './SecurityConfig.vue'
+import ReleaseConfig from './ReleaseConfig.vue'
 // import UploadConfig from './UploadConfig.vue'
 // import PushConfig from './PushConfig.vue'
 

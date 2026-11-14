@@ -26,3 +26,21 @@ export function getConfigInfo() {
     })
 }
 
+
+export function saveReleaseConfig(data) {
+    return request({
+        url: '/system/config/release/save',
+        method: 'post',
+        data
+    })
+}
+
+
+
+export function getReleaseConfig() {
+    return request({
+        url: '/system/config/release/info',
+        method: 'get',
+    })
+}
+
