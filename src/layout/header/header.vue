@@ -29,6 +29,9 @@
         <!-- 右侧：操作区 -->
         <div class="flex items-center gap-4">
 
+            <div class="flex gap-8">
+                <img src="@/assets/svg/apk.svg" @click="downloadApk" title="下载安卓安装包" alt="apk安装包" class="w-6 h-6 cursor-pointer">
+            </div>
             <!-- 国际化 -->
             <a-dropdown>
                 <button class="w-10 h-10 flex items-center justify-center rounded-lg
@@ -60,7 +63,6 @@
 <script setup>
 import userDropdown from './userDropdown.vue';
 import useConfigStore from "@/store/system/config"
-import useMenuStore from '@/store/system/menu'
 import { menuList } from "../sider/menuList"
 import { toggleCollapsed, collapsed } from "./collapsed.js"
 const router = useRouter()
@@ -75,5 +77,10 @@ const config = computed(() => configStore.config)
 const handleChange = (value) => {
     router.push({ name: value })
 };
+
+function downloadApk(){
+    window.open(configStore.releaseConfig.appUrl.url, '_blank')
+}
+
 
 </script>

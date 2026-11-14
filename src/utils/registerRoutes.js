@@ -26,8 +26,6 @@ function registerRoutes(router, menuList) {
             },
         }
         if (item.component && item.type == 1) {
-            console.log(`@/views/${item.component}.vue`);
-            
             newRouter.component = () => import(`@/views/${item.component}.vue`)
         }
 

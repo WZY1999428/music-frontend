@@ -9,7 +9,6 @@
     </div>
 </template>
 
-
 <script setup>
 import useConfigStore from "@/store/system/config"
 import { menuList } from "./menuList"

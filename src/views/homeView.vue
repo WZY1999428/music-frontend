@@ -5,13 +5,14 @@
             class="shadow-sm rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 text-white overflow-hidden relative">
             <div class="flex items-center justify-between relative z-10 py-2">
                 <div class="space-y-2">
-                    <h2 class="text-2xl font-bold text-black mb-1">早安，管理员！👋</h2>
+                    <h2 class="text-2xl font-bold text-black mb-1">{{ currentDate }}，{{ userInfo?.isSuperAdmin ? '超级管理员'
+                        : userInfo?.role?.name || '游客' }}！👋</h2>
                     <p class="text-blue-500 text-sm">欢迎回到后台管理系统，今天也是充满活力的一天！</p>
                 </div>
                 <div class="hidden md:flex space-x-6 text-right">
                     <div>
                         <div class="text-blue-500 text-xs">系统运行时间</div>
-                        <div class="text-xl font-semibold text-blue-600 mt-1">128 天</div>
+                        <div class="text-xl font-semibold text-blue-600 mt-1">{{ systemInfo.systemUptime }} </div>
                     </div>
                     <div>
                         <div class="text-blue-500 text-xs">今日访问量</div>
@@ -36,7 +37,7 @@
                         </div>
                     </div>
                     <div :class="`p-3 rounded-xl bg-${stat.color}-50 text-${stat.color}-500`">
-                        <component :is="stat.icon" class="text-2xl" />
+                        <component :is="getAntDesignIcon(stat.icon)" class="text-2xl" />
                     </div>
                 </div>
             </a-card>
@@ -49,11 +50,11 @@
                 <div class="mb-4">
                     <a-card title="快捷导航" :bordered="false" class="shadow-sm rounded-lg">
                         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                            <div v-for="nav in quickNavs" :key="nav.title"
+                            <div v-for="nav in quickNavs" :key="nav.title" @click="handleQuickNav(nav)"
                                 class="flex flex-col items-center justify-center p-4 border border-gray-100 rounded-lg hover:bg-blue-50/50 hover:border-blue-200 cursor-pointer transition-all group">
                                 <div
                                     :class="`p-3 rounded-lg bg-${nav.color}-50 text-${nav.color}-500 group-hover:scale-110 transition-transform`">
-                                    <component :is="nav.icon" class="text-xl" />
+                                    <component :is="getAntDesignIcon(nav.icon)" class="text-xl" />
                                 </div>
                                 <span class="text-xs text-gray-600 mt-2 font-medium">{{ nav.title }}</span>
                             </div>
@@ -85,22 +86,34 @@
                 <!-- 系统公告 -->
                 <div class="mb-4">
                     <a-card title="通知公告" :bordered="false" class="shadow-sm rounded-lg">
-                        <template #extra><a class="text-xs text-blue-500 hover:underline" href="#">更多</a></template>
                         <div class="space-y-3">
-                            <div v-for="item in announcements" :key="item.id"
-                                class="flex items-start justify-between border-b border-gray-50 pb-2 last:border-0 last:pb-0">
-                                <div class="space-y-1 pr-2">
-                                    <div
-                                        class="text-xs text-gray-700 font-medium line-clamp-1 hover:text-blue-500 cursor-pointer">
-                                        {{ item.title }}
+                            <template v-for="item in announcements" :key="item.id">
+                                <a-tooltip placement="topLeft" :title="item.content"
+                                    :overlayStyle="{ maxWidth: '500px' }">
+                                    <div class="border-b border-gray-50 pb-2 last:border-0 last:pb-0 cursor-pointer">
+                                        <div class="flex items-start justify-between gap-2">
+                                            <div
+                                                class="text-xs text-gray-700 font-medium line-clamp-1 hover:text-blue-500">
+                                                {{ item.title }}
+                                            </div>
+
+                                            <a-tag :color="item.type === 'SECURITY' ? 'red' : 'blue'"
+                                                class="text-[10px] scale-90 transform-gpu shrink-0">
+                                                {{ getDictName('NOTICE_TYPE', item.type) }}
+                                            </a-tag>
+                                        </div>
+
+                                        <div class="text-[11px] text-gray-400 line-clamp-2 mt-1 leading-4 break-words">
+                                            {{ item.content }}
+                                        </div>
+
+                                        <div class="text-[10px] text-gray-400 mt-1">
+                                            {{ formatDate(item.createdAt) }}
+                                        </div>
                                     </div>
-                                    <div class="text-[11px] text-gray-400">{{ item.date }}</div>
-                                </div>
-                                <a-tag :color="item.type === 'important' ? 'red' : 'blue'"
-                                    class="text-[10px] scale-90 transform-gpu">
-                                    {{ item.tag }}
-                                </a-tag>
-                            </div>
+                                </a-tooltip>
+                            </template>
+
                         </div>
                     </a-card>
                 </div>
@@ -128,36 +141,40 @@
 </template>
 
 <script setup>
-import { ref, markRaw } from 'vue'
-import {
-    UserOutlined,
-    SettingOutlined,
-    BookOutlined,
-    SafetyCertificateOutlined,
-    TeamOutlined,
-    FileTextOutlined,
-    AppstoreOutlined,
-    BellOutlined
-} from '@ant-design/icons-vue'
+import { ref, reactive } from 'vue'
+import { getSystemInfo, getQuickNavs, getNotice, getStatCards } from '@/request/system'
+import useUserStore from "@/store/user"
+const router = useRouter()
+const userStore = useUserStore()
 
-const envMODE= import.meta.env.MODE
+const userInfo = computed(() => userStore.userInfo)
 
+const currentDate = computed(() => {
+    const hour = new Date().getHours()
+    if (hour >= 5 && hour < 9) {
+        return '早上好'
+    } else if (hour >= 9 && hour < 11) {
+        return '上午好'
+    } else if (hour >= 11 && hour < 13) {
+        return '中午好'
+    } else if (hour >= 13 && hour < 17) {
+        return '下午好'
+    } else if (hour >= 17 && hour < 19) {
+        return '傍晚好'
+    } else if (hour >= 19 && hour < 22) {
+        return '晚上好该休息了'
+    } else {
+        return '深夜了早点休息'
+    }
+})
+
+const envMODE = import.meta.env.MODE
+const systemInfo = reactive({ systemUptime: 0 })
 // 顶部统计卡片数据
-const statCards = ref([
-    { title: '总用户量', value: '8,848', change: '12%', isUp: true, color: 'blue', icon: markRaw(UserOutlined) },
-    { title: '在线人数', value: '423', change: '5%', isUp: true, color: 'green', icon: markRaw(TeamOutlined) },
-    { title: '系统日志', value: '12,042', change: '2%', isUp: false, color: 'orange', icon: markRaw(FileTextOutlined) },
-    { title: '异常警报', value: '0', change: '0%', isUp: true, color: 'purple', icon: markRaw(BellOutlined) },
-])
+const statCards = ref([])
 
 // 快捷入口数据
-const quickNavs = ref([
-    { title: '用户管理', icon: markRaw(UserOutlined), color: 'blue' },
-    { title: '系统设置', icon: markRaw(SettingOutlined), color: 'gray' },
-    { title: '字典管理', icon: markRaw(BookOutlined), color: 'orange' },
-    { title: '权限控制', icon: markRaw(SafetyCertificateOutlined), color: 'green' },
-    { title: '菜单管理', icon: markRaw(AppstoreOutlined), color: 'indigo' },
-])
+const quickNavs = ref([])
 
 // 官方/系统公告数据
 const announcements = ref([
@@ -165,6 +182,35 @@ const announcements = ref([
     { id: 2, title: '后台权限角色分组功能升级完成说明', date: '2026-09-08', type: 'normal', tag: '更新' },
     { id: 3, title: '关于提高系统管理员账号安全强度的通知', date: '2026-09-05', type: 'normal', tag: '安全' },
 ])
+
+getSystemInfoData()
+function getSystemInfoData() {
+    getSystemInfo().then(res => {
+        systemInfo.systemUptime = res.systemUptime
+    })
+    getQuickNavs().then(res => {
+        quickNavs.value = res;
+    })
+
+    getNotice().then(res => {
+        announcements.value = res;
+    })
+
+    getStatCards().then(res => {
+        statCards.value = res;
+    })
+}
+
+
+function handleQuickNav(item) {
+    router.push({ name: item.path })
+}
+
+
+
+
+
+
 </script>
 
 <style scoped>
