@@ -1,8 +1,8 @@
 <template>
     <a-modal v-model:open="show" title="选择音乐" :width="1000" destroyOnClose>
         <a-form ref="formRef" :model="queryForm" layout="inline" @finish="fetchTableData()">
-            <a-form-item label="歌手名称" name="title">
-                <a-input v-model:value="queryForm.title" placeholder="请输入歌手名称" />
+            <a-form-item label="歌手名称" name="singer">
+                <a-input v-model:value="queryForm.singer" placeholder="请输入歌手名称" />
             </a-form-item>
             <a-form-item label="歌曲名称" name="title">
                 <a-input v-model:value="queryForm.title" placeholder="请输入歌曲名称" />
