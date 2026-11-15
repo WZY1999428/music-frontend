@@ -1,8 +1,8 @@
 <template>
     <a-modal v-model:open="show" title="选择音乐" :width="1000" destroyOnClose>
         <a-form ref="formRef" :model="queryForm" layout="inline" @finish="fetchTableData()">
-            <a-form-item label="歌手名称" name="singer">
-                <a-input v-model:value="queryForm.singer" placeholder="请输入歌手名称" />
+            <a-form-item label="歌手名称" name="artist">
+                <a-input v-model:value="queryForm.artist" placeholder="请输入歌手名称" />
             </a-form-item>
             <a-form-item label="歌曲名称" name="title">
                 <a-input v-model:value="queryForm.title" placeholder="请输入歌曲名称" />
@@ -22,6 +22,13 @@
                     <template v-if="column.key === 'cover'">
                         <a-image :width="36" :height="36" :src="record[column.key]"
                             class="rounded object-cover border flex-shrink-0" />
+                    </template>
+                    <template v-else-if="column.key === 'artistList'">
+                        <div class="flex flex-wrap gap-2">
+                            <a-tag v-for="artist in record[column.key]" :key="artist.id" color="blue">
+                                {{ artist.name }}
+                            </a-tag>
+                        </div>
                     </template>
                     <template v-else-if="column.key === 'createdAt' || column.key === 'updatedAt'">
                         {{ formatDateTime(record[column.key]) }}
@@ -69,6 +76,11 @@ const columns = reactive([
         key: 'title',
     },
     {
+        title: '歌手',
+        dataIndex: 'artistList',
+        key: 'artistList',
+    },
+    {
         title: '歌曲发布日期',
         dataIndex: 'publishDate',
         key: 'publishDate',
@@ -107,7 +119,7 @@ const rowSelection = {
 
 const queryForm = reactive({
     title: "",
-    singer: "",
+    artist: "",
     pageIndex: 1,
     pageSize: 10
 });
@@ -144,7 +156,7 @@ async function submit() {
 watch(() => show.value, (newVal) => {
     resetFields()
     if (newVal) {
-       
+
         fetchTableData()
     }
 });
@@ -153,7 +165,7 @@ watch(() => show.value, (newVal) => {
 function resetFields(data = {}) {
     formData.value = {
     }
-     songIds.value = []
+    songIds.value = []
 }
 
 </script>
