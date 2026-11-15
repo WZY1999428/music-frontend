@@ -63,21 +63,8 @@
                 </div>
 
                 <!-- 最近操作日志 / 任务 -->
-                <a-card title="系统最新动态" :bordered="false" class="shadow-sm rounded-lg mt-4">
-                    <a-timeline class="mt-2">
-                        <a-timeline-item color="green">
-                            <div class="text-xs text-gray-800 font-medium">管理员 修改了字典数据【用户状态】</div>
-                            <div class="text-xs text-gray-400 mt-0.5">10 分钟前</div>
-                        </a-timeline-item>
-                        <a-timeline-item color="blue">
-                            <div class="text-xs text-gray-800 font-medium">系统完成了自动数据备份</div>
-                            <div class="text-xs text-gray-400 mt-0.5">2 小时前</div>
-                        </a-timeline-item>
-                        <a-timeline-item color="gray">
-                            <div class="text-xs text-gray-800 font-medium">新增用户【张三】注册成功</div>
-                            <div class="text-xs text-gray-400 mt-0.5">昨天 18:30</div>
-                        </a-timeline-item>
-                    </a-timeline>
+                <a-card title="音乐类型统计" :bordered="false" class="shadow-sm rounded-lg mt-4" v-if="options">
+                    <BaseChart :option="options" width="100%" height="400px"></BaseChart>
                 </a-card>
             </div>
 
@@ -142,8 +129,10 @@
 
 <script setup>
 import { ref, reactive } from 'vue'
-import { getSystemInfo, getQuickNavs, getNotice, getStatCards } from '@/request/system'
+import { getSystemInfo, getQuickNavs, getNotice, getStatCards, getSongTypeStatistics } from '@/request/system'
 import useUserStore from "@/store/user"
+import BaseChart from "@/components/BaseChart"
+import * as echarts from 'echarts';
 const router = useRouter()
 const userStore = useUserStore()
 
@@ -173,6 +162,8 @@ const systemInfo = reactive({ systemUptime: 0 })
 // 顶部统计卡片数据
 const statCards = ref([])
 
+const options = ref(null)
+
 // 快捷入口数据
 const quickNavs = ref([])
 
@@ -198,6 +189,106 @@ function getSystemInfoData() {
 
     getStatCards().then(res => {
         statCards.value = res;
+    })
+
+    getSongTypeStatistics().then(res => {
+        options.value = {
+            title: {
+                text: '音乐类型分布',
+                subtext: '各类型歌曲数量统计',
+                left: 'left',
+                textStyle: {
+                    fontSize: 16,
+                    fontWeight: 600
+                },
+                subtextStyle: {
+                    fontSize: 12,
+                    color: '#999'
+                }
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                },
+                formatter(params) {
+                    const item = params[0];
+                    return `${item.name}<br/>歌曲数量：${item.value}首`;
+                }
+            },
+            grid: {
+                left: 90,
+                right: 45,
+                top: 65,
+                bottom: 20,
+                containLabel: false
+            },
+            xAxis: {
+                type: 'value',
+                min: 0,
+                axisLabel: {
+                    color: '#999'
+                },
+                splitLine: {
+                    lineStyle: {
+                        type: 'dashed',
+                        color: '#eee'
+                    }
+                },
+                axisLine: {
+                    show: false
+                },
+                axisTick: {
+                    show: false
+                }
+            },
+            yAxis: {
+                type: 'category',
+                data: res.map(item => item.title),
+                axisLabel: {
+                    color: '#666',
+                    fontSize: 12
+                },
+                axisLine: {
+                    show: false
+                },
+                axisTick: {
+                    show: false
+                }
+            },
+            series: [
+                {
+                    name: '歌曲数量',
+                    type: 'bar',
+                    barWidth: 25,
+                    data: res.map(item => item.total),
+                    itemStyle: {
+                        borderRadius: [0, 2, 2, 0],
+                        color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [
+                            {
+                                offset: 0,
+                                color: '#409EFF'
+                            },
+                            {
+                                offset: 1,
+                                color: '#91C8FF'
+                            }
+                        ])
+                    },
+                    label: {
+                        show: true,
+                        position: 'right',
+                        color: '#666',
+                        fontSize: 12
+                    },
+                    emphasis: {
+                        itemStyle: {
+                            color: '#1677FF'
+                        }
+                    }
+                }
+            ]
+        };
     })
 }
 

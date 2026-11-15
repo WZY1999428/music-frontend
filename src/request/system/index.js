@@ -33,3 +33,11 @@ export function getStatCards() {
 }
 
 
+export function getSongTypeStatistics() {
+    return request({
+        url: '/system/home/songTypeStatistics',
+        method: 'get',
+    })
+}
+
+
