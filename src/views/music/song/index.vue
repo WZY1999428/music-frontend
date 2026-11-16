@@ -71,7 +71,7 @@
             </a-spin>
         </div>
     </div>
-    <editDialog v-model="show" :id="songId" :readonly="readonly" @saveSuccess="fetchTableData()"></editDialog>
+    <editDialog v-model="show" :id="songId" :readonly="readonly"   @saveSuccess="fetchTableData(pagination)"></editDialog>
     <LyricsManagement v-model="lyricsManagementShow" :id="songId"></LyricsManagement>
 </template>
 

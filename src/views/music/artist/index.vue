@@ -70,7 +70,7 @@
     </div>
 
     <editDialog v-model="show" :id="agreementsId" :readonly="readonly"
-        @saveSuccess="fetchTableData({ current: queryForm.pageIndex, pageSize: queryForm.pageSize })"></editDialog>
+        @saveSuccess="fetchTableData(pagination)"></editDialog>
 </template>
 
 <script setup>
