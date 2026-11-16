@@ -1,6 +1,6 @@
 <template>
     <a-modal v-model:open="show" :title="title" :confirmLoading="confirmLoading" :width="900" destroyOnClose
-        :mask-closable="false">
+        :afterClose="audioStore.stop()" :mask-closable="false">
         <a-spin tip="加载中..." :spinning="detailLoading">
             <a-form ref="formRef" :rules="rulesRef" :model="formData" :label-col="{ style: { width: '90px' } }"
                 :disabled="readonly">
@@ -36,7 +36,7 @@
                     </a-col>
                     <a-col :span="12">
                         <a-form-item name="publishDate" label="发布时间">
-                            <a-date-picker v-model:value="formData.publishDate" style="width:100%" 
+                            <a-date-picker v-model:value="formData.publishDate" style="width:100%"
                                 value-format="YYYY-MM-DD" />
                         </a-form-item>
                     </a-col>
@@ -78,10 +78,13 @@
                                     <div v-for="(audio, index) in audioList" :key="audio.id ?? index"
                                         class="border rounded-lg p-3">
                                         <div class="flex items-center gap-3">
-                                            <div
-                                                class="w-10 h-10 flex items-center justify-center rounded bg-blue-50 text-blue-500">
-                                                <SoundOutlined />
-                                            </div>
+                                            <span 
+                                                class="w-10 h-10 flex items-center justify-center rounded bg-blue-50 text-blue-500 cursor-pointer">
+                                                <img v-if="audioStore.audioId == audio.id && audioStore.isPlaying"
+                                                    src="@/assets/svg/pause.svg" alt="暂停按钮" 
+                                                    @click="audioStore.pause()" style="width: 20px; height: 20px;" />
+                                                <SoundOutlined  @click="playAudio(audio)" v-else />
+                                            </span>
 
                                             <div class="flex-1 min-w-0">
                                                 <div class="truncate">
@@ -145,11 +148,13 @@
 import uploadImage from "@/components/uploadImage/index.vue"
 import uploadFile from "@/components/uploadFile/index.vue"
 import DictSelect from "@/components/dictSelect/index.vue"
+import useAudioPlayerStore from "@/store/audioPlayer"
 import { PlusOutlined, DeleteOutlined, SoundOutlined, UploadOutlined, InboxOutlined } from '@ant-design/icons-vue'
 import { getSongInfo, saveSong, uploadAudio } from "@/request/music/song.js"
 import { searchArtist, artistByIds } from "@/request/music/artist.js"
 import { message, Empty } from 'ant-design-vue';
 import { reactive } from "vue"
+const audioStore = useAudioPlayerStore();
 const props = defineProps({
     id: [Number, String],
     readonly: Boolean,
@@ -209,6 +214,10 @@ function fetchArtistByIds(ids) {
     }).catch(err => {
         console.log(err);
     })
+}
+
+function playAudio(audio) {
+    audioStore.play(audio.id, audio.url);
 }
 
 watch(() => show.value, (newVal) => {
@@ -377,9 +386,9 @@ function initForm(data = {}) {
         publishDate: data.publishDate,
         singerList: data.singerList ?? []
     }
-   
 
-    if(data.singerList && data.singerList.length) {
+
+    if (data.singerList && data.singerList.length) {
         fetchArtistByIds(data.singerList)
     }
 

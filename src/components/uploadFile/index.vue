@@ -259,6 +259,7 @@ async function uploadFile(file, item) {
             headers: {
                 'Content-Type': 'multipart/form-data'
             },
+            timeout: 1000 * 60,
             onUploadProgress(event) {
                 if (event.total) {
                     item.percent = Math.round(

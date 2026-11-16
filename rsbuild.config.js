@@ -7,8 +7,9 @@ const AutoImport = require("unplugin-auto-import/rspack").default;
 const env = import.meta.env;
 
 
+
 const backendProxy = {
-  target: env.BASE_URL,
+  target: env.PUBLIC_BASE_URL,
   changeOrigin: true,
 };
 
