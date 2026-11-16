@@ -9,9 +9,18 @@
                             <a-input v-model:value.trim="formData.name" placeholder="请输入歌手名称" />
                         </a-form-item>
                     </a-col>
-                    <a-col :span="12">
+                    <a-col :span="24">
                         <a-form-item name="alias" label="歌手别名">
-                            <a-input v-model:value.trim="formData.alias" placeholder="请输入歌手别名" />
+                            <template v-for="(tag, index) in formData.alias" :key="tag">
+                                <a-tag closable @close="formData.alias.splice(index, 1)"> {{ tag.alias }}</a-tag>
+                            </template>
+                            <a-input v-if="inputVisible" ref="aliasInputRef" v-model:value="aliasInputValue" type="text"
+                                size="small" :style="{ width: '78px' }" @blur="handleInputConfirm"
+                                @keyup.enter="handleInputConfirm" />
+                            <a-tag v-else style="background: #fff; border-style: dashed" @click="showInput">
+                                <plus-outlined />
+                                新增别名
+                            </a-tag>
                         </a-form-item>
                     </a-col>
                     <a-col :span="12">
@@ -49,7 +58,8 @@
                     <a-switch v-model:checked="formData.enabled" :checkedValue="1" :unCheckedValue="0" />
                 </a-form-item>
                 <a-form-item name="description" label="歌手简介">
-                    <a-textarea v-model:value="formData.description" :max-length="500" show-count placeholder="请输入" :rows="5" />
+                    <a-textarea v-model:value="formData.description" :max-length="500" show-count placeholder="请输入"
+                        :rows="5" />
                 </a-form-item>
             </a-form>
         </a-spin>
@@ -67,8 +77,9 @@
 import uploadImage from "@/components/uploadImage/index.vue"
 import DictSelect from "@/components/dictSelect/index.vue"
 import { getArtistInfo, saveArtist } from "@/request/music/artist.js"
-
+import { PlusOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
+import { nextTick } from "vue";
 const props = defineProps({
     id: [Number, String],
     readonly: Boolean,
@@ -80,7 +91,9 @@ const show = defineModel({
 })
 
 const formData = ref({})
+const aliasInputValue = ref("")
 const formRef = ref(null)
+const aliasInputRef = ref(null)
 const rulesRef = reactive({
     name: { required: true, message: '请输入歌手名称', },
     avatar: { required: true, message: '请上传歌手头像', },
@@ -93,6 +106,7 @@ const title = computed(() => (props.id && props.readonly) ? '歌手详情' : pro
 const emits = defineEmits(["saveSuccess"])
 
 const detailLoading = ref(false)
+const inputVisible = ref(false)
 const confirmLoading = ref(false)
 
 function submit() {
@@ -106,6 +120,23 @@ function submit() {
     })
 }
 
+function handleInputConfirm() {
+    inputVisible.value = false;
+    if (!aliasInputValue.value) return
+    if (formData.value.alias.some(it => it.alias == aliasInputValue.value)) {
+        message.success("不能添加重复别名")
+        return
+    }
+    formData.value.alias.push({ alias: aliasInputValue.value })
+    aliasInputValue.value = ""
+}
+
+function showInput() {
+    inputVisible.value = true
+    nextTick(() => {
+        aliasInputRef.value?.focus()
+    })
+}
 
 function fetchRoleInfo() {
     detailLoading.value = true;
@@ -125,7 +156,7 @@ watch(() => show.value, (newVal) => {
 function initForm(data = {}) {
     formData.value = {
         name: data.name,
-        alias: data.alias,
+        alias: data.alias || [],
         avatar: data.avatar,
         cover: data.cover,
         gender: data.gender,
@@ -135,6 +166,7 @@ function initForm(data = {}) {
         enabled: data.enabled ?? 1,
         description: data.description,
     }
+    aliasInputValue.value = ""
 }
 
 </script>
