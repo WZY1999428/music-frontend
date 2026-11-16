@@ -198,7 +198,7 @@ function handleDelete(id) {
         async onOk() {
             await delSong(id).then(_ => {
                 message.success("删除成功")
-              fetchTableData(pagination)
+                fetchTableData(pagination.value)
             }).catch(() => { })
         },
         onCancel() {
