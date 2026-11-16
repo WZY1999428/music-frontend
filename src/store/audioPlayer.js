@@ -72,7 +72,7 @@ const useAudioPlayerStore = defineStore("audioPlayerStore", () => {
 
     // 播放音频
     async function play(id, url) {
-        const audioUrl = `${import.meta.env.PUBLIC_BASE_URL}/${url}`
+        const audioUrl = `${import.meta.env.PUBLIC_BASE_URL}/${url.replace(/^\//, '')}`
         const audio = audioPlayer.value
         if (!audio) {
             message.error("音频播放器未初始化")
