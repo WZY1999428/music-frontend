@@ -20,7 +20,6 @@
                         {{ getStatusText(file) }}
                     </span>
                 </div>
-
                 <!-- 上传进度 -->
                 <div v-if="file.status === 'uploading'" class="progress">
                     <div class="progress-inner" :style="{ width: file.percent + '%' }" />
@@ -76,7 +75,6 @@ const modelValue = defineModel({
     default: undefined
 })
 
-const inputRef = ref(null)
 const fileList = ref([])
 
 const uploading = computed(() =>
@@ -261,6 +259,7 @@ async function uploadFile(file, item) {
             },
             timeout: 1000 * 60,
             onUploadProgress(event) {
+            console.log(event);
                 if (event.total) {
                     item.percent = Math.round(
                         event.loaded / event.total * 100
@@ -350,10 +349,6 @@ async function handleSelect(event) {
         }
 
         fileList.value.push(item)
-
-        console.log(file);
-
-
         return uploadFile(file, item)
     })
 
@@ -480,6 +475,7 @@ function handleRemove(file) {
 }
 
 .progress-inner {
+    height: 100%;
     height: 100%;
     background: #1677ff;
     transition: width 0.2s;
