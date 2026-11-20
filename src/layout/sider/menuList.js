@@ -5,7 +5,6 @@ export const menuMap = new Map();
 
 export const menuList = computed(() => {
     const menuStore = useMenuStore();
-
     menuMap.clear();
     const list = menuStore.menuList.slice(0);
     const nodes = [];
@@ -27,10 +26,9 @@ export const menuList = computed(() => {
         if (checkIcon(item.icon)) {
             newItem.icon = () => h(getAntDesignIcon(item.icon));
         }
-
         if (item.type == 0) newItem.children = [];
-        if (item.parentId) {
-            const parent = menuMap.get(String(item.parentId));
+        if (item.parentId > 0) {
+            const parent = menuMap.get(item.parentId);
             if (parent) {
                 parent.children = parent.children || [];
                 parent.children.push(newItem)
@@ -38,8 +36,11 @@ export const menuList = computed(() => {
         } else {
             nodes.push(newItem);
         }
-        menuMap.set(String(item.id), newItem);
+
+        menuMap.set(item.id, newItem);
     }
+
+
     const homeView = {
         key: 'home',
         icon: () => h(getAntDesignIcon('AppstoreOutlined')),
@@ -48,8 +49,18 @@ export const menuList = computed(() => {
     };
 
     menuMap.set(homeView.key, homeView)
+    const statisticsView = {
+        key: 'statistics',
+        icon: () => h(getAntDesignIcon('BarChartOutlined')),
+        label: '数据统计',
+    };
+
+    console.log(nodes);
+
+    menuMap.set(statisticsView.key, statisticsView)
     return [
         homeView,
+        statisticsView,
         ...nodes
     ]
 })

@@ -7,6 +7,9 @@
             <a-form-item label="歌手地区" name="area">
                 <DictSelect v-model="queryForm.area" placeholder="请选择" dictCode="ARTIST_REGION" style="width: 280px;" />
             </a-form-item>
+            <a-form-item label="歌手性别" name="gender">
+                <DictSelect v-model="queryForm.gender" placeholder="请选择" dictCode="ARTIST_GENDER" style="width: 280px;" />
+            </a-form-item>
             <a-form-item label="日期范围" name="dateRange">
                 <a-range-picker v-model:value="queryForm.dateRange" style="width: 280px;" value-format="YYYY-MM-DD" />
             </a-form-item>
@@ -88,6 +91,7 @@ const loading = ref(false)
 const formRef = ref(null)
 const queryForm = reactive({
     title: "",
+    gender: null,
     status: null,
     dateRange: [],
     area: null,

@@ -10,6 +10,15 @@ export default [
         },
     },
     {
+        name: "statistics",
+        path: "statistics",
+        component: () => import("@/views/music/statistics/index.vue"),
+        meta: {
+            title: "数据统计",
+            id: "statistics"
+        },
+    },
+    {
         name: "userinfo",
         path: "userinfo",
         redirect: "/userinfo/profile",

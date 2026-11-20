@@ -16,4 +16,4 @@ createApp(App)
     .use(Antd)
     .use(router)
     .use(directives)
-    .mount('#root');
+    .mount('#MUSIC');

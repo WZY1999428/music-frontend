@@ -16,13 +16,16 @@ const backendProxy = {
 export default () => {
   return {
     plugins: [pluginVue(), pluginTailwindcss(), pluginSass()],
-
+    html: {
+      mountId:"MUSIC",
+      title: '音乐播放后台',
+    },
     resolve: {
       alias: {
         '@': './src',
       },
     },
-    
+
     dev: {
       writeToDisk: true,
     },

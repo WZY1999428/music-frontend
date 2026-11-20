@@ -8,8 +8,8 @@ const useMenuStore = defineStore('menuStore', () => {
     const fetchMenu = () => {
         getRoutes().then(({ rouets, permissions }) => {
             permissionsSet.clear()
-            menuList.splice(0)
-            menuList.push(...rouets)
+            menuList.splice(0, menuList.length, ...rouets)
+            console.log("menuListmenuListmenuListmenuListmenuList", menuList);
             permissions.forEach(permission => permissionsSet.add(permission))
             setItem("menuList", menuList)
             setItem("permission", permissions)

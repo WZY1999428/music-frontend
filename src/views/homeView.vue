@@ -168,11 +168,7 @@ const options = ref(null)
 const quickNavs = ref([])
 
 // 官方/系统公告数据
-const announcements = ref([
-    { id: 1, title: '系统预计于本周五晚 24:00 进行常规例行维护', date: '2026-09-10', type: 'important', tag: '维护' },
-    { id: 2, title: '后台权限角色分组功能升级完成说明', date: '2026-09-08', type: 'normal', tag: '更新' },
-    { id: 3, title: '关于提高系统管理员账号安全强度的通知', date: '2026-09-05', type: 'normal', tag: '安全' },
-])
+const announcements = ref([])
 
 getSystemInfoData()
 function getSystemInfoData() {
