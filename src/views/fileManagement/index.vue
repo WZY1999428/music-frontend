@@ -216,7 +216,7 @@ function handleDelete(row) {
             try {
                 await delUploadFiles(row ? [row.id] : rowselection.selectedRowKeys.value);
                 message.success('删除成功');
-                fetchTableData();
+                fetchTableData(pagination);
             } catch (error) {
                 console.error(error);
             }
